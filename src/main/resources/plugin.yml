@@ -1,0 +1,11 @@
+name: BuyingRegions
+version: '1.0'
+main: PSPlugins.buyingRegions.BuyingRegions
+api-version: '1.21'
+authors: [ Gornichnaya ]
+description: allows you to buy regions
+website: serbezivan@gmail.com
+commands:
+  ps:
+    description: Операции для приобретения регионов
+    usage: /<command> <confirm|cost|rgbuy|rgsub|size>
