@@ -45,5 +45,11 @@ public class psMessages {
 
     }
 
+    public static void NotFoundNamePrivateMess(Player p)
+    {
+        p.sendMessage(ChatColor.YELLOW  + "" + ChatColor.BOLD + "PrivateSeller" + ChatColor.GREEN + ": " +
+                ChatColor.RED + "Укажите название региона!" + ChatColor.YELLOW + "   /ps rgbuy [название]" );
+    }
+
 
 }
