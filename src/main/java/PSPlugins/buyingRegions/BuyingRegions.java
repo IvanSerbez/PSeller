@@ -5,10 +5,13 @@ import org.bukkit.plugin.java.JavaPlugin;
 
 public final class BuyingRegions extends JavaPlugin {
 
+    PsCommand pscomm;
     @Override
     public void onEnable() {
 
-        getCommand("ps").setExecutor(new PsCommand(this));
+        pscomm = new PsCommand(this);
+        getCommand("ps").setExecutor(pscomm);
+        getCommand("ps").setTabCompleter(pscomm);
 
     }
 

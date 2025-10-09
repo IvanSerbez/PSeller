@@ -67,6 +67,7 @@ public class PsCommand implements CommandExecutor, TabCompleter {
                 }
 
             }
+            return subComm;
 
 
         }

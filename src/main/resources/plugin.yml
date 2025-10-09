@@ -5,6 +5,7 @@ api-version: '1.21'
 authors: [ Gornichnaya ]
 description: allows you to buy regions
 website: serbezivan@gmail.com
+depend: [WorldEdit]
 commands:
   ps:
     description: Операции для приобретения регионов
