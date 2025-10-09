@@ -7,13 +7,16 @@ import com.sk89q.worldedit.bukkit.BukkitAdapter;
 import com.sk89q.worldedit.bukkit.BukkitPlayer;
 import com.sk89q.worldedit.math.BlockVector3;
 import com.sk89q.worldedit.regions.Region;
+import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 import org.bukkit.util.Vector;
 
 
 public class Cost {
 
-    public static void costRegion(Player p)
+
+
+    private static CostDataBox mathOperation(Player p)
     {
         BukkitPlayer Player = BukkitAdapter.adapt(p);
         LocalSession session = WorldEdit.getInstance().getSessionManager().get(Player);
@@ -32,21 +35,55 @@ public class Cost {
 
             int price = (int) (200 + (-0.0000004 * Math.pow(sizeX,2) * Math.pow(sizeZ,2) + 0.40 * sizeX * sizeZ) * (1 + sizeY / 512));
 
+             return new CostDataBox(p,price,new Vector(sizeX,sizeY,sizeZ),summSize);
 
-
-            psMessages.CostMess(p,price, new Vector(sizeX,sizeY,sizeZ), summSize);
 
 
 
         } catch (Exception e) {
-            p.sendMessage("Выделение не найдено или неполное.");
+            p.sendMessage(ChatColor.YELLOW  + "" + ChatColor.BOLD + "PrivateSeller" + ChatColor.GREEN + ": " + ChatColor.RED + "Выделение не найдено! выделите две точки //pos1 и //pos2");
+            return null;
         }
+
+    }
+
+    public static void costRegion(Player p)
+    {
+
+        CostDataBox dataBox = mathOperation(p);
+        if(dataBox !=null)
+        psMessages.CostMess(p,dataBox.price, dataBox.size,dataBox.summSize);
+
+    }
+
+    public static void sizeRegion(Player p)
+    {
+        CostDataBox dataBox = mathOperation(p);
+        if(dataBox !=null)
+        psMessages.SizeMess(p,dataBox.size,dataBox.summSize);
+
     }
 
 
 
 
+    }
 
 
+
+
+    class CostDataBox
+    {
+       public Player player;
+       public int price, summSize;
+       public Vector size;
+        CostDataBox(Player p, int price, Vector size, int summSize)
+        {
+            this.player = p;
+            this.price = price;
+            this.summSize = summSize;
+            this.size = size;
+
+        }
     }
 
