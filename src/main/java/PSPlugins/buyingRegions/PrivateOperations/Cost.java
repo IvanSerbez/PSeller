@@ -41,6 +41,7 @@ public class Cost {
 
 
         } catch (Exception e) {
+
             psMessages.NotFoundSelectionMess(p);
             return null;
         }
@@ -58,7 +59,8 @@ public class Cost {
 
     public static CostDataBox getCostDataBox(Player p)
     { CostDataBox dataBox = mathOperation(p);
-       return dataBox;
+        if(dataBox != null){
+       return dataBox;} else return null;
     }
 
     public static void sizeRegion(Player p)

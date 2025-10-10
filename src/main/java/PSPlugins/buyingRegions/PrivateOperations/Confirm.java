@@ -14,42 +14,37 @@ public class Confirm {
     {
         CostDataBox costDatabox = Cost.getCostDataBox(p);
         Economy economy = VaultHook.getEconomy();
-        if(!economy.has(p,costDatabox.price))
-        {
-            psMessages.PrivateNotEnoughMoney(p);
+        if(costDatabox != null) {
+            if (!economy.has(p, costDatabox.price)) {
+                psMessages.PrivateNotEnoughMoney(p);
 
 
-        } else
-        {
-            String privateName;
+            } else {
+                String privateName;
 
-            if(p.hasMetadata("privateName"))
-            {
+                if (p.hasMetadata("privateName")) {
                     privateName = p.getMetadata("privateName").get(0).asString();
 
-                    if(PrivateOperations.privateNameCheck(p,privateName) && PrivateOperations.privatIntersectionCheck(p))
-                    {
+                    if (PrivateOperations.privateNameCheck(p, privateName) && PrivateOperations.privatIntersectionCheck(p)) {
 
-                    EconomyResponse response = economy.withdrawPlayer(p, costDatabox.price);
-                    if(response.transactionSuccess())
-                      {
-                          PrivateOperations.CreatePrivate(p,privateName);
-                          psMessages.ByeByeMoney(p, costDatabox.price);
-                          psMessages.Privatebuy(p);
-                      }else
-                      {
-                          psMessages.PrivateNotEnoughMoney(p);
-                      }
+                        EconomyResponse response = economy.withdrawPlayer(p, costDatabox.price);
+                        if (response.transactionSuccess()) {
+                            PrivateOperations.CreatePrivate(p, privateName);
+                            psMessages.ByeByeMoney(p, costDatabox.price);
+                            psMessages.Privatebuy(p);
+                        } else {
+                            psMessages.PrivateNotEnoughMoney(p);
+                        }
                     }
-            } else
-            {
-                   // Название привата не найдено или занято
+                } else {
+                    // Название привата не найдено или занято
+                }
+
+
             }
 
-
-
-        }
-
+        } else { //psMessages.NotFoundSelectionMess(p);
+             }
 
     }
 }

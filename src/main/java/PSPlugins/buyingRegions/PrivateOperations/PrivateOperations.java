@@ -34,7 +34,7 @@ public class PrivateOperations {
 
 
             } catch (Exception e) {
-                p.sendMessage("Exception " + e);
+
                 return false;
             }
 
@@ -113,7 +113,7 @@ public class PrivateOperations {
                 pos2 = region.getMaximumPoint();
 
             } catch (IncompleteRegionException e) {
-                throw new RuntimeException(e);
+           //    psMessages.NotFoundSelectionMess(p);
             }
 
 
