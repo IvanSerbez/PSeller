@@ -1,26 +1,45 @@
 package PSPlugins.buyingRegions.PrivateOperations;
 
 
+import PSPlugins.buyingRegions.BuyingRegions;
+import PSPlugins.buyingRegions.Hooks.VaultHook;
 import PSPlugins.buyingRegions.Messages.psMessages;
 
+import jdk.jfr.Enabled;
+import net.milkbowl.vault.economy.Economy;
 import org.bukkit.entity.Player;
+import org.bukkit.metadata.FixedMetadataValue;
 
 
 public class rgBuy {
 
 
-    public static void buyRegion(Player p, String privateName) {
+
+
+    public static void buyRegion(Player p, String privateName, BuyingRegions plugin) {
+
 
 
         if(!PrivateOperations.privateNameCheck(p,privateName))
         {
             psMessages.PrivateNameErrorMess(p,privateName);
+        }else
+        {     p.setMetadata("privateName", new FixedMetadataValue(plugin, privateName));
         }
 
         if(PrivateOperations.privatIntersectionCheck(p))
         {
-            psMessages.PrivatePriceMess(p, Cost.getCostDataBox(p).price);
+            CostDataBox costDatabox = Cost.getCostDataBox(p);
+            Economy economy = VaultHook.getEconomy();
+            if(!economy.has(p,costDatabox.price))
+            {
+                psMessages.PrivateNotEnoughMoney(p);
+
+
+            } else {
+            psMessages.PrivatePriceMess(p, Cost.getCostDataBox(p).price); }
         } else {psMessages.PrivateAreaErrorMess(p);}
+
 
 
 

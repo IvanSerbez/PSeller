@@ -72,13 +72,23 @@ public class psMessages {
 
     public static void PrivatePriceMess(Player p, int price)
     {
-        p.sendMessage(PSStr + ChatColor.GRAY +"Покупка такого региона будет стоить " + ChatColor.GREEN + ChatColor.BOLD + price + "$" +  ChatColor.GRAY +", введите " + ChatColor.GREEN + "/ps confirm" + ChatColor.GRAY + " для подтверждения.");
+        p.sendMessage(PSStr + ChatColor.GRAY +"Покупка такого региона будет стоить " + ChatColor.GREEN + ChatColor.BOLD + price + ChatColor.GRAY + ChatColor.BOLD + "$" +  ChatColor.GRAY +", введите " + ChatColor.GREEN + "/ps confirm" + ChatColor.GRAY + " для подтверждения.");
 
     }
 
     public static  void PrivateNotEnoughMoney(Player p)
     {
         p.sendMessage(PSStr + ChatColor.RED + "Недостаточно средств.");
+
+    }
+
+    public static void Privatebuy(Player p)
+    {
+        p.sendMessage(PSStr + ChatColor.GRAY + "Вы успешно приобрели регион!");
+    }
+    public static void ByeByeMoney(Player p, int price)
+    {
+        p.sendMessage(PSStr + ChatColor.GRAY + "С вашего баланса снято : " + ChatColor.GREEN + price + ChatColor.GRAY+ "$");
 
     }
 }

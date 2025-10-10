@@ -65,6 +65,24 @@ public class PrivateOperations {
         return true; // !!!!
     }
 
+    public static void CreatePrivate(Player p, String privateName)
+    {
+        RegionDataBox data = new RegionDataBox(p);
+
+        if (privatIntersectionCheck(p) && privateNameCheck(p, privateName))
+        {
+
+
+            ProtectedRegion privat = new ProtectedCuboidRegion(privateName, data.pos1, data.pos2);
+            privat.getOwners().addPlayer(p.getUniqueId());
+            data.manager.addRegion(privat);
+
+
+        }
+
+
+    }
+
 
     public static class RegionDataBox {
 
