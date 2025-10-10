@@ -41,7 +41,7 @@ public class Cost {
 
 
         } catch (Exception e) {
-            p.sendMessage(ChatColor.YELLOW  + "" + ChatColor.BOLD + "PrivateSeller" + ChatColor.GREEN + ": " + ChatColor.RED + "Выделение не найдено! выделите две точки //pos1 и //pos2");
+            psMessages.NotFoundSelectionMess(p);
             return null;
         }
 
