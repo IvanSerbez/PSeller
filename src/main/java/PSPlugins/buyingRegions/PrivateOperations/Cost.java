@@ -56,6 +56,11 @@ public class Cost {
 
     }
 
+    public static CostDataBox getCostDataBox(Player p)
+    { CostDataBox dataBox = mathOperation(p);
+       return dataBox;
+    }
+
     public static void sizeRegion(Player p)
     {
         CostDataBox dataBox = mathOperation(p);

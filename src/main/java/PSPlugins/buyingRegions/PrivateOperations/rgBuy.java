@@ -68,14 +68,17 @@ public class rgBuy {
                     ApplicableRegionSet set = manager.getApplicableRegions(test);
                     if(!set.getRegions().isEmpty())
                     {
-                        psMessages.PrivatAreaErrorMess(p);return;
+                        psMessages.PrivateAreaErrorMess(p);return;
                     }
                 } catch (Exception e){
                     p.sendMessage("Exception " + e);
                 }
 
 
+                psMessages.PrivatePriceMess(p, Cost.getCostDataBox(p).price);
 
+                // cоздание надо перенести в confirm после подтверждения платежа
+                // надо проверять пересечения регионов после подтверждения. но до снятия денег и создания региона
                 if (manager.getRegion(privateName) != null) {
                     psMessages.PrivateNameErrorMess(p, privateName);
                     return;

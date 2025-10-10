@@ -17,12 +17,12 @@ public class psMessages {
         }
 
         p.sendMessage(PSStr
-                + ChatColor.YELLOW + "Размер региона " + ChatColor.RED +  "" + ChatColor.BOLD +"X"
+                + ChatColor.GRAY + "Размер региона " + ChatColor.RED +  "" + ChatColor.BOLD +"X"
                 + ChatColor.GREEN + "" + ChatColor.BOLD + "Y"
                 + ChatColor.BLUE + "" + ChatColor.BOLD + "Z"
                 + ChatColor.GREEN + " : " + (int)size.getX() + " " + (int)size.getY() + " " + (int)size.getZ());
-        p.sendMessage(PSStr + ChatColor.YELLOW + "Суммарное кол-во. блоков составляет : " + ChatColor.GREEN + summSize);
-        p.sendMessage(PSStr + ChatColor.YELLOW + "Стоимость региона составляет : " + ChatColor.GREEN + "" + ChatColor.BOLD + price + ChatColor.YELLOW + "$");
+        p.sendMessage(PSStr + ChatColor.GRAY + "Суммарное кол-во. блоков составляет : " + ChatColor.GREEN + summSize);
+        p.sendMessage(PSStr + ChatColor.GRAY + "Стоимость региона составляет : " + ChatColor.GREEN + "" + ChatColor.BOLD + price + ChatColor.GRAY + "$");
 
     }
 
@@ -34,10 +34,10 @@ public class psMessages {
             p.sendMessage(PSStr + ChatColor.RED + "Размер региона превышает лимит в 20.000.000 блоков. вы НЕ сможете приобрести такой регион!!!");
         }
 
-        p.sendMessage(PSStr + ChatColor.YELLOW + "Суммарное кол-во. блоков составляет : " + ChatColor.GREEN + summSize);
+        p.sendMessage(PSStr + ChatColor.GRAY + "Суммарное кол-во. блоков составляет : " + ChatColor.GREEN + summSize);
 
         p.sendMessage(PSStr
-                + ChatColor.YELLOW + "Размер региона " + ChatColor.RED +  "" + ChatColor.BOLD +"X"
+                + ChatColor.GRAY + "Размер региона " + ChatColor.RED +  "" + ChatColor.BOLD +"X"
                 + ChatColor.GREEN + "" + ChatColor.BOLD + "Y"
                 + ChatColor.BLUE + "" + ChatColor.BOLD + "Z"
                 + ChatColor.GREEN + " : " + (int)size.getX() + " " + (int)size.getY() + " " + (int)size.getZ());
@@ -53,7 +53,7 @@ public class psMessages {
     public static void NotFoundNamePrivateMess(Player p)
     {
         p.sendMessage(PSStr +
-                ChatColor.RED + "Укажите название региона!" + ChatColor.YELLOW + "   /ps rgbuy [название]" );
+                ChatColor.RED + "Укажите название региона!" + ChatColor.GRAY + "   /ps rgbuy [название]" );
     }
 
     public static void PrivateNameErrorMess(Player p, String privateName)
@@ -63,10 +63,22 @@ public class psMessages {
 
     }
 
-    public static void PrivatAreaErrorMess(Player p)
+    public static void PrivateAreaErrorMess(Player p)
     {
         p.sendMessage(PSStr +
                 ChatColor.RED + "Здесь уже есть регион! выберите другое место для региона.");
+
+    }
+
+    public static void PrivatePriceMess(Player p, int price)
+    {
+        p.sendMessage(PSStr + ChatColor.GRAY +"Покупка такого региона будет стоить+ " + ChatColor.GREEN + ChatColor.BOLD + price + "$" +  ChatColor.GRAY +", введите" + ChatColor.GREEN + "/ps confirm" + ChatColor.GRAY + " для подтверждения");
+
+    }
+
+    public static  void PrivateNotEnoughMoney(Player p)
+    {
+        p.sendMessage(PSStr + ChatColor.RED + "Недостаточно средств.");
 
     }
 }
