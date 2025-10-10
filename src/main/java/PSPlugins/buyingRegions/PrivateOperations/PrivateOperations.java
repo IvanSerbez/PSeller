@@ -20,38 +20,17 @@ import org.bukkit.entity.Player;
 public class PrivateOperations {
 
 
-    public static boolean privateop(Player p) {
+    public static boolean privatIntersectionCheck(Player p) {
 
-        BlockVector3 pos1, pos2;
-        World bukkitWorld = p.getWorld();
-        BukkitPlayer player = BukkitAdapter.adapt(p);
-        com.sk89q.worldedit.world.World CurrentWorld = BukkitAdapter.adapt(bukkitWorld);
-        LocalSession session = WorldEdit.getInstance().getSessionManager().get(player);
-
-        RegionContainer container = WorldGuard.getInstance().getPlatform().getRegionContainer();
-        RegionManager manager = container.get(CurrentWorld);
-
-
-        if (manager == null) {
-            return false;
-        }
-
-
-        try {
-
-            Region region = session.getSelection(player.getWorld());
-
-            pos1 = region.getMinimumPoint();
-            pos2 = region.getMaximumPoint();
+        RegionDataBox data = new RegionDataBox(p);
 
             // проверка на пересечение региона с другими уже существующими регионами
             try {
-                ProtectedRegion test = new ProtectedCuboidRegion("dummy", pos1, pos2);
-                ApplicableRegionSet set = manager.getApplicableRegions(test);
+                ProtectedRegion test = new ProtectedCuboidRegion("dummy", data.pos1, data.pos2);
+                ApplicableRegionSet set = data.manager.getApplicableRegions(test);
                 if (!set.getRegions().isEmpty()) {
-                    psMessages.PrivateAreaErrorMess(p);
                     return false;
-                }
+                } else {return  true;}
 
 
             } catch (Exception e) {
@@ -60,13 +39,68 @@ public class PrivateOperations {
             }
 
 
-            return true;
 
-        } catch (IncompleteRegionException e) {
-           return false;
+    }
+
+
+    public static boolean privateNameCheck(Player p, String privateName) {
+
+       RegionDataBox data = new RegionDataBox(p);
+
+        if (data.manager.getRegion(privateName) != null) {
+            return false;
+        }
+
+        // создание региона
+        /*
+        ProtectedRegion privat = new ProtectedCuboidRegion(privateName, data.pos1, data.pos2);
+        privat.getOwners().addPlayer(p.getUniqueId());
+        data.manager.addRegion(privat);
+        */
+
+        // } catch (Exception e) {
+        //   psMessages.NotFoundSelectionMess(p);
+
+        // }
+        return true; // !!!!
+    }
+
+
+    public static class RegionDataBox {
+
+        public BlockVector3 pos1, pos2;
+        public   World bukkitWorld;
+        public   BukkitPlayer player;
+        public   com.sk89q.worldedit.world.World CurrentWorld;
+        public   LocalSession session;
+        public  RegionContainer container;
+        public  RegionManager manager;
+        public  Region region;
+
+        public RegionDataBox(Player p) {
+
+
+             bukkitWorld = p.getWorld();
+             player = BukkitAdapter.adapt(p);
+             CurrentWorld = BukkitAdapter.adapt(bukkitWorld);
+             session = WorldEdit.getInstance().getSessionManager().get(player);
+
+            container = WorldGuard.getInstance().getPlatform().getRegionContainer();
+            manager = container.get(CurrentWorld);
+
+            try {
+                region = session.getSelection(player.getWorld());
+
+                pos1 = region.getMinimumPoint();
+                pos2 = region.getMaximumPoint();
+
+            } catch (IncompleteRegionException e) {
+                throw new RuntimeException(e);
+            }
+
+
         }
 
 
     }
-
 }

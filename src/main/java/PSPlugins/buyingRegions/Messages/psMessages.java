@@ -20,7 +20,7 @@ public class psMessages {
                 + ChatColor.GRAY + "Размер региона " + ChatColor.RED +  "" + ChatColor.BOLD +"X"
                 + ChatColor.GREEN + "" + ChatColor.BOLD + "Y"
                 + ChatColor.BLUE + "" + ChatColor.BOLD + "Z"
-                + ChatColor.GREEN + " : " + (int)size.getX() + " " + (int)size.getY() + " " + (int)size.getZ());
+                + ChatColor.GRAY + " : " + ChatColor.GREEN + (int)size.getX() + " " + (int)size.getY() + " " + (int)size.getZ());
         p.sendMessage(PSStr + ChatColor.GRAY + "Суммарное кол-во. блоков составляет : " + ChatColor.GREEN + summSize);
         p.sendMessage(PSStr + ChatColor.GRAY + "Стоимость региона составляет : " + ChatColor.GREEN + "" + ChatColor.BOLD + price + ChatColor.GRAY + "$");
 
@@ -40,7 +40,7 @@ public class psMessages {
                 + ChatColor.GRAY + "Размер региона " + ChatColor.RED +  "" + ChatColor.BOLD +"X"
                 + ChatColor.GREEN + "" + ChatColor.BOLD + "Y"
                 + ChatColor.BLUE + "" + ChatColor.BOLD + "Z"
-                + ChatColor.GREEN + " : " + (int)size.getX() + " " + (int)size.getY() + " " + (int)size.getZ());
+                + ChatColor.GRAY + " : " + ChatColor.GREEN + (int)size.getX() + " " + (int)size.getY() + " " + (int)size.getZ());
 
 
     }
@@ -72,7 +72,7 @@ public class psMessages {
 
     public static void PrivatePriceMess(Player p, int price)
     {
-        p.sendMessage(PSStr + ChatColor.GRAY +"Покупка такого региона будет стоить+ " + ChatColor.GREEN + ChatColor.BOLD + price + "$" +  ChatColor.GRAY +", введите" + ChatColor.GREEN + "/ps confirm" + ChatColor.GRAY + " для подтверждения");
+        p.sendMessage(PSStr + ChatColor.GRAY +"Покупка такого региона будет стоить " + ChatColor.GREEN + ChatColor.BOLD + price + "$" +  ChatColor.GRAY +", введите " + ChatColor.GREEN + "/ps confirm" + ChatColor.GRAY + " для подтверждения.");
 
     }
 
