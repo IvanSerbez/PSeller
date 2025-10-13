@@ -41,10 +41,10 @@ public class rgBuy {
 
                 } else {
                     psMessages.PrivatePriceMess(p, Cost.getCostDataBox(p).price);
-            } 
+            }
 
-            } else {psMessages.PrivateAreaErrorMess(p);}
-        }
+            }
+        }  else {psMessages.PrivateAreaErrorMess(p);}
 
 
     }

@@ -32,10 +32,10 @@ public class Cost {
             int sizeZ = Math.abs(pos2.getZ() - pos1.getZ()) + 1;
 
             int summSize = sizeX * sizeY * sizeZ;
-
-            int price = (int) (200 + (-0.0000004 * Math.pow(sizeX,2) * Math.pow(sizeZ,2) + 0.40 * sizeX * sizeZ) * (1 + sizeY / 512));
-
-             return new CostDataBox(p,price,new Vector(sizeX,sizeY,sizeZ),summSize);
+                         //C = 200 + (-0.0000004 * X^2 * Z^2 + 0.40 * X * Z) * (1 + Y / 512)
+            int price = (int)(200 + (-0.0000004 * Math.pow(sizeX,2) * Math.pow(sizeZ,2) + 0.40 * sizeX * sizeZ) * (1 + (double) sizeY / 512));
+            int pricesub = (int)(200 + (-0.0000004 * Math.pow(sizeX,2) * Math.pow(sizeZ,2) + 0.40 * sizeX * sizeZ) * (1 + (double) sizeY / 512)*25/100);
+             return new CostDataBox(p,price,new Vector(sizeX,sizeY,sizeZ),summSize,pricesub);
 
 
 
@@ -82,14 +82,15 @@ public class Cost {
     class CostDataBox
     {
        public Player player;
-       public int price, summSize;
+       public int price, summSize, priceSubPrivate;
        public Vector size;
-        CostDataBox(Player p, int price, Vector size, int summSize)
+        CostDataBox(Player p, int price, Vector size, int summSize, int priceSubPrivate)
         {
             this.player = p;
             this.price = price;
             this.summSize = summSize;
             this.size = size;
+            this.priceSubPrivate = priceSubPrivate;
 
         }
     }

@@ -10,6 +10,17 @@ public class Confirm {
 
 
 
+    public static void confirmBuying(Player p)
+    {
+        boolean thisIsSubPrivate = false;
+        if(p.hasMetadata("ThisIsSubPrivate"))
+        { thisIsSubPrivate = p.getMetadata("ThisIsSubPrivate").get(0).asBoolean(); }
+
+
+    }
+
+
+
     public static void confrimBuying(Player p)
     {
         CostDataBox costDatabox = Cost.getCostDataBox(p);
@@ -21,7 +32,6 @@ public class Confirm {
 
             } else {
                 String privateName;
-
                 if (p.hasMetadata("privateName")) {
                     privateName = p.getMetadata("privateName").get(0).asString();
 
@@ -32,19 +42,11 @@ public class Confirm {
                             PrivateOperations.CreatePrivate(p, privateName);
                             psMessages.ByeByeMoney(p, costDatabox.price);
                             psMessages.Privatebuy(p);
-                        } else {
-                            psMessages.PrivateNotEnoughMoney(p);
-                        }
+                        } else {psMessages.PrivateNotEnoughMoney(p);}
                     }
-                } else {
-                    // Название привата не найдено или занято
-                }
-
+                } else {/* Название привата не найдено или занято*/}
 
             }
-
-        } else { //psMessages.NotFoundSelectionMess(p);
-             }
-
+        }
     }
 }

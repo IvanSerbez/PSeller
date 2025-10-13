@@ -31,7 +31,7 @@ public class psMessages {
 
         if(summSize > 20000000)
         {
-            p.sendMessage(PSStr + ChatColor.RED + "Размер региона превышает лимит в 20.000.000 блоков. вы НЕ сможете приобрести такой регион!!!");
+            LimitErrorMess(p);
         }
 
         p.sendMessage(PSStr + ChatColor.GRAY + "Суммарное кол-во. блоков составляет : " + ChatColor.GREEN + summSize);
@@ -91,4 +91,7 @@ public class psMessages {
         p.sendMessage(PSStr + ChatColor.GRAY + "С вашего баланса снято : " + ChatColor.GREEN + price + ChatColor.GRAY+ "$");
 
     }
+
+    public static void LimitErrorMess(Player p)
+    { p.sendMessage(PSStr + ChatColor.RED + "Размер региона превышает лимит в 20.000.000 блоков. вы НЕ сможете приобрести такой регион!!!");}
 }
