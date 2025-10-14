@@ -1,5 +1,7 @@
 package PSPlugins.buyingRegions.PrivateOperations;
 
+import PSPlugins.buyingRegions.BuyingRegions;
+import PSPlugins.buyingRegions.Commands.PsCommand;
 import PSPlugins.buyingRegions.Messages.psMessages;
 import com.sk89q.worldedit.IncompleteRegionException;
 import com.sk89q.worldedit.LocalSession;
@@ -24,6 +26,7 @@ import java.util.UUID;
 
 public class PrivateOperations {
 
+   ;
 
     public static boolean privatIntersectionCheck(Player p) {
 
@@ -145,7 +148,7 @@ public class PrivateOperations {
     }
 
 
-    public static void CreatePrivate(Player p, String privateName, Boolean isSub)
+    public static void CreatePrivate(Player p, String privateName, Boolean isSub, BuyingRegions plugin)
     {
         RegionDataBox data = new RegionDataBox(p);
         if(!isSub) {
@@ -154,6 +157,7 @@ public class PrivateOperations {
 
                 ProtectedRegion privat = new ProtectedCuboidRegion(privateName, data.pos1, data.pos2);
                 privat.getOwners().addPlayer(p.getUniqueId());
+                privat.setFlag(plugin.PAID_FLAG, true);
                 data.manager.addRegion(privat);
 
 
@@ -165,10 +169,19 @@ public class PrivateOperations {
 
                 ProtectedRegion privat = new ProtectedCuboidRegion(privateName, data.pos1, data.pos2);
                 privat.getOwners().addPlayer(p.getUniqueId());
-               // добавить родителя privat.getParent();
-                privat.setPriority(1); // поменять на динамическое определение
-                data.manager.addRegion(privat);
 
+                ProtectedRegion parentReg = GetRegionWithMaxPriority(p);
+                if(parentReg != null) {
+                    try {
+
+                        privat.setParent(parentReg);
+                    } catch (Exception e) {
+                        return; /*Error NullParent*/
+                    }
+                    privat.setPriority(parentReg.getPriority() + 1); // поменять на динамическое определение
+                    privat.setFlag(plugin.PAID_FLAG, true);
+                    data.manager.addRegion(privat);
+                }
                 // надо добавить приоритет. просмотр вложенных приватов (для отслеживания и назначения приоритетов)
 
 
@@ -189,14 +202,16 @@ public class PrivateOperations {
             ProtectedRegion test = new ProtectedCuboidRegion("dummy", data.pos1, data.pos2);
             ApplicableRegionSet set = data.manager.getApplicableRegions(test);
 
-            String regionId = "-1", regionIdPos1 = null, regionIdPos2 = null;
+            String regionId = "-1";
             ProtectedRegion maxPriorityReg = null;
 
+            // Получение всех регионов в выделении
             List<ProtectedRegion> detectregion = new ArrayList<>();
             set.forEach(detectregion::add);
 
             for (int i = 0; i < detectregion.size(); i++) {
                 var hashReg = detectregion.get(i);
+                // получени и проверка овнеров в регионе
                 Set<UUID> ownersList = hashReg.getOwners().getUniqueIds();
                 for (UUID playerUUID : ownersList) {
 

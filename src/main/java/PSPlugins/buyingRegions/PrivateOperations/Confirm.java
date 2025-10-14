@@ -1,5 +1,6 @@
 package PSPlugins.buyingRegions.PrivateOperations;
 
+import PSPlugins.buyingRegions.BuyingRegions;
 import PSPlugins.buyingRegions.Hooks.VaultHook;
 import PSPlugins.buyingRegions.Messages.psMessages;
 import net.milkbowl.vault.economy.Economy;
@@ -11,19 +12,19 @@ public class Confirm {
 static String privateName = null;
 static  String mDataPrivateName = "PrivateName";
 
-    public static void confirmBuying(Player p)
+    public static void confirmBuying(Player p, BuyingRegions plugin)
     {
         boolean thisIsSubPrivate = false;
         if(p.hasMetadata("ThisIsSubPrivate"))
         {thisIsSubPrivate = p.getMetadata("ThisIsSubPrivate").get(0).asBoolean(); p.sendMessage(thisIsSubPrivate + "  p.getMetadata(\"ThisIsSubPrivate\").get(0).asBoolean() "); }
 
         if(thisIsSubPrivate)
-        {confirmSubPrivate(p);} else
-        {confirmPrivate(p);}
+        {confirmSubPrivate(p, plugin);} else
+        {confirmPrivate(p, plugin);}
 
     }
 
-    private static void  confirmPrivate(Player p)
+    private static void  confirmPrivate(Player p, BuyingRegions plugin)
     {
         if(!hasMoney(p,false))
         { /* error */  return;}
@@ -33,12 +34,12 @@ static  String mDataPrivateName = "PrivateName";
        {
         if(PrivateOperations.privateNameCheck(p,privateName) && PrivateOperations.privatIntersectionCheck(p))
         {
-          byebyeMoney(p,false);
+          byebyeMoney(p,false, plugin);
         }
        }
     }
 
-    private static void  confirmSubPrivate(Player p)
+    private static void  confirmSubPrivate(Player p, BuyingRegions plugin)
     {
         if(!hasMoney(p,true))
         { /* error */  return;}
@@ -48,7 +49,7 @@ static  String mDataPrivateName = "PrivateName";
         {
             if(PrivateOperations.privateNameCheck(p,privateName) && PrivateOperations.subPrivateIntersection(p))
             {
-                byebyeMoney(p,true);
+                byebyeMoney(p,true, plugin);
             }
         }
     }
@@ -80,7 +81,7 @@ static  String mDataPrivateName = "PrivateName";
     }
 
 
-    private static void byebyeMoney(Player p, Boolean isSub) {
+    private static void byebyeMoney(Player p, Boolean isSub, BuyingRegions plugin) {
 
         CostDataBox costDataBox = Cost.getCostDataBox(p);
 
@@ -95,7 +96,7 @@ static  String mDataPrivateName = "PrivateName";
 
             EconomyResponse response = economy.withdrawPlayer(p, costDataBox.price);
             if (response.transactionSuccess()) {
-                PrivateOperations.CreatePrivate(p, privateName, false);
+                PrivateOperations.CreatePrivate(p, privateName, false, plugin);
 
                 psMessages.ByeByeMoney(p, costDataBox.price);
                 psMessages.Privatebuy(p);
@@ -107,7 +108,7 @@ static  String mDataPrivateName = "PrivateName";
 
             EconomyResponse response = economy.withdrawPlayer(p, costDataBox.priceSubPrivate);
             if (response.transactionSuccess()) {
-                PrivateOperations.CreatePrivate(p, privateName, true);
+                PrivateOperations.CreatePrivate(p, privateName, true, plugin);
                 psMessages.ByeByeMoney(p, costDataBox.priceSubPrivate);
                 psMessages.Privatebuy(p);
             } else {
