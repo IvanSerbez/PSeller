@@ -35,10 +35,10 @@ public class PsCommand implements CommandExecutor, TabCompleter {
 
 
             switch (args[0]) {
-                case "confirm":  Confirm.confrimBuying(p);    break;
+                case "confirm":  Confirm.confirmBuying(p);    break;
                 case "cost":     Cost.costRegion(p);          break;
                 case "rgbuy":    if(args.length ==2 ){ rgBuy.buyRegion(p,args[1].toString(), plugin); } else { rgBuy.buyRegion(p); }   break;
-                case "rgsub":    rgSub.buySubPrivate(p);      break;
+                case "rgsub":    if(args.length ==2 ){  rgSub.buySubPrivate(p,args[1].toString(), plugin); } else { rgSub.buySubPrivate(p); }   break;
                 case "size":     Cost.sizeRegion(p);     break;
             }
 

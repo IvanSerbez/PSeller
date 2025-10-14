@@ -8,10 +8,12 @@ import org.bukkit.entity.Player;
 import org.bukkit.metadata.FixedMetadataValue;
 
 public class rgSub {
+    static  String mDataPrivateName = "PrivateName";
 
     public static  void buySubPrivate(Player p, String privateName, BuyingRegions plugin)
     {
 
+        p.setMetadata("ThisIsSubPrivate", new FixedMetadataValue(plugin, false));
 
         CostDataBox costDatabox = Cost.getCostDataBox(p);
         if(costDatabox == null) {return;}
@@ -24,48 +26,25 @@ public class rgSub {
             psMessages.PrivateNameErrorMess(p,privateName);
             return;
         }else
-        {     p.setMetadata("privateName", new FixedMetadataValue(plugin, privateName));
+        {     p.setMetadata(mDataPrivateName, new FixedMetadataValue(plugin, privateName));
         }
 
 
         if(PrivateOperations.subPrivateIntersection(p))
         {
-            if (costDatabox != null) {
                 Economy economy = VaultHook.getEconomy();
                 if (!economy.has(p, costDatabox.priceSubPrivate)) {
                     psMessages.PrivateNotEnoughMoney(p);
-                    return;
-
 
                 } else {
                     p.setMetadata("ThisIsSubPrivate", new FixedMetadataValue(plugin, true));
                     psMessages.PrivatePriceMess(p, Cost.getCostDataBox(p).priceSubPrivate);
                 }
 
-            }
+
 
         }
 
-        if(PrivateOperations.privatIntersectionCheck(p)) {
-
-
-            if (costDatabox != null) {
-                Economy economy = VaultHook.getEconomy();
-                if (!economy.has(p, costDatabox.price)) {
-                    psMessages.PrivateNotEnoughMoney(p);
-                    return;
-
-
-                } else {
-                    psMessages.PrivatePriceMess(p, Cost.getCostDataBox(p).price);
-                }
-
-            }
-        }  else {psMessages.PrivateAreaErrorMess(p);}
-
-
-
-
     }
-    public static  void buySubPrivate(Player p){}
+    public static  void buySubPrivate(Player p){/* Ошибка. Введите название суб привата */}
 }

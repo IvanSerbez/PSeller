@@ -70,14 +70,14 @@ public class PrivateOperations {
     RegionDataBox data = new RegionDataBox(p);
 
     // проверка на пересечение региона с другими уже существующими регионами
-            try {
+        try {
         ProtectedRegion test = new ProtectedCuboidRegion("dummy", data.pos1, data.pos2);
         ApplicableRegionSet set = data.manager.getApplicableRegions(test);
 
 
         ///   //////////////////////////////// проверка на овнера для суб приватов
 
-        String regionId = null, regionIdPos1 = null, regionIdPos2 = null;
+        String regionId = "-1", regionIdPos1 = null, regionIdPos2 = null;
 
 
         List<ProtectedRegion> detectregion = new ArrayList<>();
@@ -86,24 +86,27 @@ public class PrivateOperations {
         for (int i = 0; i < detectregion.size(); i++)
         {
             var hashReg = detectregion.get(i);
-
             Set<UUID> ownersList = hashReg.getOwners().getUniqueIds();
             for (UUID playerUUID : ownersList)
             {
-                if(playerUUID == p.getUniqueId())
+
+                if(playerUUID.equals(p.getUniqueId()))
                 {
+
                     regionId = hashReg.getId();
-                    break;
+
+
                 }
             }
 
 
         }
-        /// ///////////////////////////////////////
 
 
-        if(regionId != null)
+
+        if(!regionId.equals("-1"))
         {
+
             // проверка что субприват находится в привате игрока (проверка первой и второй точки)
             ApplicableRegionSet parentRegPos1 = data.manager.getApplicableRegions(data.pos1);
             ApplicableRegionSet parentRegPos2 = data.manager.getApplicableRegions(data.pos2);
@@ -142,18 +145,34 @@ public class PrivateOperations {
     }
 
 
-public static void CreatePrivate(Player p, String privateName)
+    public static void CreatePrivate(Player p, String privateName, Boolean isSub)
     {
         RegionDataBox data = new RegionDataBox(p);
+        if(!isSub) {
+            if (privatIntersectionCheck(p) && privateNameCheck(p, privateName)) {
 
-        if (privatIntersectionCheck(p) && privateNameCheck(p, privateName))
+
+                ProtectedRegion privat = new ProtectedCuboidRegion(privateName, data.pos1, data.pos2);
+                privat.getOwners().addPlayer(p.getUniqueId());
+                data.manager.addRegion(privat);
+
+
+            }
+        }else
         {
+            if (subPrivateIntersection(p) && privateNameCheck(p, privateName)) {
 
 
-            ProtectedRegion privat = new ProtectedCuboidRegion(privateName, data.pos1, data.pos2);
-            privat.getOwners().addPlayer(p.getUniqueId());
-            data.manager.addRegion(privat);
+                ProtectedRegion privat = new ProtectedCuboidRegion(privateName, data.pos1, data.pos2);
+                privat.getOwners().addPlayer(p.getUniqueId());
+               // добавить родителя privat.getParent();
+                privat.setPriority(1); // поменять на динамическое определение
+                data.manager.addRegion(privat);
 
+                // надо добавить приоритет. просмотр вложенных приватов (для отслеживания и назначения приоритетов)
+
+
+            }
 
         }
 
@@ -161,6 +180,47 @@ public static void CreatePrivate(Player p, String privateName)
     }
 
 
+    public static ProtectedRegion GetRegionWithMaxPriority(Player p)
+    {
+        RegionDataBox data = new RegionDataBox(p);
+
+        // проверка на пересечение региона с другими уже существующими регионами
+        try {
+            ProtectedRegion test = new ProtectedCuboidRegion("dummy", data.pos1, data.pos2);
+            ApplicableRegionSet set = data.manager.getApplicableRegions(test);
+
+            String regionId = "-1", regionIdPos1 = null, regionIdPos2 = null;
+            ProtectedRegion maxPriorityReg = null;
+
+            List<ProtectedRegion> detectregion = new ArrayList<>();
+            set.forEach(detectregion::add);
+
+            for (int i = 0; i < detectregion.size(); i++) {
+                var hashReg = detectregion.get(i);
+                Set<UUID> ownersList = hashReg.getOwners().getUniqueIds();
+                for (UUID playerUUID : ownersList) {
+
+                    if (playerUUID.equals(p.getUniqueId())) {
+
+                        if(maxPriorityReg == null) {maxPriorityReg = hashReg;}
+                        else if(maxPriorityReg.getPriority() < hashReg.getPriority())
+                        {
+                            maxPriorityReg = hashReg;
+                        }
+
+                        
+
+
+                    }
+                }
+            }
+            return maxPriorityReg;
+
+
+            } catch (Exception e) {/*error*/}
+
+     return null;
+    }
     public static class RegionDataBox {
 
         public BlockVector3 pos1, pos2;

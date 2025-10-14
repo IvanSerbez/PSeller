@@ -11,14 +11,14 @@ import org.bukkit.metadata.FixedMetadataValue;
 
 public class rgBuy {
 
-
+    static  String mDataPrivateName = "PrivateName";
 
 
     public static void buyRegion(Player p, String privateName, BuyingRegions plugin) {
 
         CostDataBox costDatabox = Cost.getCostDataBox(p);
         if(costDatabox == null) {return;}
-
+        p.setMetadata("ThisIsSubPrivate", new FixedMetadataValue(plugin, false));
 
 
         if(!PrivateOperations.privateNameCheck(p,privateName))
@@ -26,7 +26,7 @@ public class rgBuy {
             psMessages.PrivateNameErrorMess(p,privateName);
             return;
         }else
-        {     p.setMetadata("privateName", new FixedMetadataValue(plugin, privateName));
+        {     p.setMetadata(mDataPrivateName, new FixedMetadataValue(plugin, privateName));
         }
 
         if(PrivateOperations.privatIntersectionCheck(p)) {
