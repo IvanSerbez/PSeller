@@ -98,7 +98,7 @@ static  String mDataPrivateName = "PrivateName";
             if (response.transactionSuccess()) {
                 PrivateOperations.CreatePrivate(p, privateName, false, plugin);
 
-                psMessages.ByeByeMoney(p, costDataBox.price);
+                psMessages.WithdrawalMoney(p);
                 psMessages.Privatebuy(p);
             } else {
                 psMessages.PrivateNotEnoughMoney(p);
@@ -109,7 +109,7 @@ static  String mDataPrivateName = "PrivateName";
             EconomyResponse response = economy.withdrawPlayer(p, costDataBox.priceSubPrivate);
             if (response.transactionSuccess()) {
                 PrivateOperations.CreatePrivate(p, privateName, true, plugin);
-                psMessages.ByeByeMoney(p, costDataBox.priceSubPrivate);
+                psMessages.WithdrawalMoneySub(p);
                 psMessages.Privatebuy(p);
             } else {
                 psMessages.PrivateNotEnoughMoney(p);

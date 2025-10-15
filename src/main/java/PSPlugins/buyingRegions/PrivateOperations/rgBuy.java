@@ -23,7 +23,7 @@ public class rgBuy {
 
         if(!PrivateOperations.privateNameCheck(p,privateName))
         {
-            psMessages.PrivateNameErrorMess(p,privateName);
+            psMessages.PrivateNameErrorMess(p);
             return;
         }else
         {     p.setMetadata(mDataPrivateName, new FixedMetadataValue(plugin, privateName));
@@ -40,7 +40,7 @@ public class rgBuy {
 
 
                 } else {
-                    psMessages.PrivatePriceMess(p, Cost.getCostDataBox(p).price);
+                    psMessages.PrivatePriceMess(p);
             }
 
             }

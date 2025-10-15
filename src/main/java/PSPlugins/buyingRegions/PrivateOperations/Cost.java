@@ -53,7 +53,7 @@ public class Cost {
 
         CostDataBox dataBox = mathOperation(p);
         if(dataBox !=null)
-        psMessages.CostMess(p,dataBox.price, dataBox.size,dataBox.summSize);
+        psMessages.CostMess(p,dataBox.price);
 
     }
 
@@ -67,7 +67,7 @@ public class Cost {
     {
         CostDataBox dataBox = mathOperation(p);
         if(dataBox !=null)
-        psMessages.SizeMess(p,dataBox.size,dataBox.summSize);
+        psMessages.SizeMess(p,dataBox.summSize);
 
     }
 
@@ -78,20 +78,4 @@ public class Cost {
 
 
 
-
-    class CostDataBox
-    {
-       public Player player;
-       public int price, summSize, priceSubPrivate;
-       public Vector size;
-        CostDataBox(Player p, int price, Vector size, int summSize, int priceSubPrivate)
-        {
-            this.player = p;
-            this.price = price;
-            this.summSize = summSize;
-            this.size = size;
-            this.priceSubPrivate = priceSubPrivate;
-
-        }
-    }
 

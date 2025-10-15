@@ -23,7 +23,7 @@ public class rgSub {
         if(!PrivateOperations.privateNameCheck(p,privateName))
         {
 
-            psMessages.PrivateNameErrorMess(p,privateName);
+            psMessages.PrivateNameErrorMess(p);
             return;
         }else
         {     p.setMetadata(mDataPrivateName, new FixedMetadataValue(plugin, privateName));
@@ -38,13 +38,13 @@ public class rgSub {
 
                 } else {
                     p.setMetadata("ThisIsSubPrivate", new FixedMetadataValue(plugin, true));
-                    psMessages.PrivatePriceMess(p, Cost.getCostDataBox(p).priceSubPrivate);
+                    psMessages.PrivatePriceMessSub(p);
                 }
 
 
 
-        }
+        }else {psMessages.NotFoundParentRegion(p);}
 
     }
-    public static  void buySubPrivate(Player p){/* Ошибка. Введите название суб привата */}
+    public static  void buySubPrivate(Player p){ psMessages.NotFoundNamePrivateMessSub(p);/* Ошибка. Введите название суб привата */}
 }

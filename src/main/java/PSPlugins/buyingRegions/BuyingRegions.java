@@ -1,15 +1,23 @@
 package PSPlugins.buyingRegions;
 
 import PSPlugins.buyingRegions.Commands.PsCommand;
+import PSPlugins.buyingRegions.Files.MessagesConfig;
 import PSPlugins.buyingRegions.Hooks.VaultHook;
 
 import com.sk89q.worldguard.WorldGuard;
 import com.sk89q.worldguard.protection.flags.BooleanFlag;
 import com.sk89q.worldguard.protection.flags.registry.FlagRegistry;
+import org.bukkit.configuration.file.FileConfiguration;
+import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.plugin.java.JavaPlugin;
+
+import java.io.File;
 
 public final class BuyingRegions extends JavaPlugin {
 
+
+    File MessageConfig;
+    FileConfiguration newConfig;
     PsCommand pscomm;
     public static final BooleanFlag PAID_FLAG = new BooleanFlag("paid");
     @Override
@@ -28,6 +36,9 @@ public final class BuyingRegions extends JavaPlugin {
         getCommand("ps").setExecutor(pscomm);
         getCommand("ps").setTabCompleter(pscomm);
 
+         MessagesConfig.setup();
+
+
         VaultHook.setupEconomy(this);
     }
 
@@ -35,5 +46,16 @@ public final class BuyingRegions extends JavaPlugin {
     public void onDisable() {
         // Plugin shutdown logic
     }
+
+    /*public void createCustomConfig() {
+        MessageConfig = new File(getDataFolder(), "Messages.yml");
+
+        if (!MessageConfig.exists()) {
+            MessageConfig.getParentFile().mkdirs();
+            saveResource("Messages.yml", false);
+        }
+
+        newConfig = YamlConfiguration.loadConfiguration(MessageConfig);
+    }*/
 
 }
