@@ -30,9 +30,9 @@ public class psMessages {
 
 
         if(data != null) {
-            PlaceHolders.put("%X_SIZE%", String.valueOf(data.size.getX()));
-            PlaceHolders.put("%Y_SIZE%", String.valueOf(data.size.getY()));
-            PlaceHolders.put("%Z_SIZE%", String.valueOf(data.size.getZ()));
+            PlaceHolders.put("%X_SIZE%", String.valueOf((int)data.size.getX()));
+            PlaceHolders.put("%Y_SIZE%", String.valueOf((int)data.size.getY()));
+            PlaceHolders.put("%Z_SIZE%", String.valueOf((int)data.size.getZ()));
             PlaceHolders.put("%SUMM_SIZE%",String.valueOf(data.summSize));
             PlaceHolders.put("%PRICE%",String.valueOf(data.price));
             PlaceHolders.put("%PRICE_SUB%",String.valueOf(data.priceSubPrivate));
@@ -121,6 +121,11 @@ public class psMessages {
 
     }
 
+    public static void PrivateNameErrorRegEx(Player p)
+    {
+        p.sendMessage(formatMessage(message.messErrorNameRegEx,p));
+    }
+
     public static void PrivateAreaErrorMess(Player p)
     {
         p.sendMessage(formatMessage(message.messErrorAreaIntersection,p));
@@ -182,6 +187,7 @@ public class psMessages {
         String messErrorLimitOfBlocks;
         String messErrorName;
         String messErrorNotFoundParent;
+        String messErrorNameRegEx;
 
         // дастать из конфига все сообщения
 
@@ -207,7 +213,7 @@ public class psMessages {
            messErrorName = messHeader + config.getString("MessErrorName");
            messErrorNotFoundParent = messHeader + config.getString("MessErrorNotFoundParent");
            messErrorNotFoundNameSub = messHeader + config.getString("MessErrorNotFoundNameSub");
-
+           messErrorNameRegEx = messHeader + config.getString("MessErrorNameRegEx");
         }
     }
 }

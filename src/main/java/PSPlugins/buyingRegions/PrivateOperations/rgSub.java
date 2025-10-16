@@ -7,6 +7,9 @@ import net.milkbowl.vault.economy.Economy;
 import org.bukkit.entity.Player;
 import org.bukkit.metadata.FixedMetadataValue;
 
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
 public class rgSub {
     static  String mDataPrivateName = "PrivateName";
 
@@ -18,9 +21,18 @@ public class rgSub {
         CostDataBox costDatabox = Cost.getCostDataBox(p);
         if(costDatabox == null) {return;}
 
+        String name = privateName;
+        Pattern pattern = Pattern.compile("\\W");
+        Matcher matcher = pattern.matcher(name);
+        if(matcher.find())
+        { // ошибка имени. неверный формат имени
+            psMessages.PrivateNameErrorRegEx(p);
+            return;
+        }
 
         p.setMetadata(mDataPrivateName, new FixedMetadataValue(plugin, privateName));
         if(!PrivateOperations.privateNameCheck(p,privateName))  {psMessages.PrivateNameErrorMess(p);return;}
+
 
 
         if(PrivateOperations.subPrivateIntersection(p))

@@ -16,7 +16,8 @@ static  String mDataPrivateName = "PrivateName";
     {
         boolean thisIsSubPrivate = false;
         if(p.hasMetadata("ThisIsSubPrivate"))
-        {thisIsSubPrivate = p.getMetadata("ThisIsSubPrivate").get(0).asBoolean(); p.sendMessage(thisIsSubPrivate + "  p.getMetadata(\"ThisIsSubPrivate\").get(0).asBoolean() "); }
+        {thisIsSubPrivate = p.getMetadata("ThisIsSubPrivate").get(0).asBoolean();}
+
 
         if(thisIsSubPrivate)
         {confirmSubPrivate(p, plugin);} else
@@ -34,13 +35,18 @@ static  String mDataPrivateName = "PrivateName";
        {
         if(PrivateOperations.privateNameCheck(p,privateName) && PrivateOperations.privatIntersectionCheck(p))
         {
-          WithdrawalMoney(p,false, plugin);
+           WithdrawalMoney(p,false, plugin);
+
+            psMessages.WithdrawalMoney(p);
+            psMessages.Privatebuy(p);
+
         }
        }
     }
 
     private static void  confirmSubPrivate(Player p, BuyingRegions plugin)
     {
+        if(!PrivateOperations.parentHasPaidFlag(p)){ return;}
         if(!hasMoney(p,true))
         { psMessages.PrivateNotEnoughMoney(p);  return;}
 
@@ -50,6 +56,10 @@ static  String mDataPrivateName = "PrivateName";
             if(PrivateOperations.privateNameCheck(p,privateName) && PrivateOperations.subPrivateIntersection(p))
             {
                 WithdrawalMoney(p,true, plugin);
+
+                psMessages.WithdrawalMoneySub(p);
+                psMessages.Privatebuy(p);
+
             }
         }
     }
@@ -81,7 +91,7 @@ static  String mDataPrivateName = "PrivateName";
     }
 
 
-    private static void WithdrawalMoney(Player p, Boolean isSub, BuyingRegions plugin) {
+    public static void WithdrawalMoney(Player p, Boolean isSub, BuyingRegions plugin) {
 
         CostDataBox costDataBox = Cost.getCostDataBox(p);
 
@@ -98,8 +108,6 @@ static  String mDataPrivateName = "PrivateName";
             if (response.transactionSuccess()) {
                 PrivateOperations.CreatePrivate(p, privateName, false, plugin);
 
-                psMessages.WithdrawalMoney(p);
-                psMessages.Privatebuy(p);
             } else {
                 psMessages.PrivateNotEnoughMoney(p);
             }
@@ -109,8 +117,8 @@ static  String mDataPrivateName = "PrivateName";
             EconomyResponse response = economy.withdrawPlayer(p, costDataBox.priceSubPrivate);
             if (response.transactionSuccess()) {
                 PrivateOperations.CreatePrivate(p, privateName, true, plugin);
-                psMessages.WithdrawalMoneySub(p);
-                psMessages.Privatebuy(p);
+             //   psMessages.WithdrawalMoneySub(p);
+             //   psMessages.Privatebuy(p);
             } else {
                 psMessages.PrivateNotEnoughMoney(p);
             }

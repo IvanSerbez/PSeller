@@ -8,6 +8,9 @@ import net.milkbowl.vault.economy.Economy;
 import org.bukkit.entity.Player;
 import org.bukkit.metadata.FixedMetadataValue;
 
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
 
 public class rgBuy {
 
@@ -20,6 +23,15 @@ public class rgBuy {
         CostDataBox costDatabox = Cost.getCostDataBox(p);
         if(costDatabox == null) {return;}
         p.setMetadata("ThisIsSubPrivate", new FixedMetadataValue(plugin, false));
+
+        String name = privateName;
+        Pattern pattern = Pattern.compile("\\W");
+        Matcher matcher = pattern.matcher(name);
+        if(matcher.find())
+        { // ошибка имени. неверный формат имени
+           psMessages.PrivateNameErrorRegEx(p);
+            return;
+        }
 
 
         p.setMetadata(mDataPrivateName, new FixedMetadataValue(plugin, privateName));

@@ -12,6 +12,8 @@ import com.sk89q.worldedit.math.BlockVector3;
 import com.sk89q.worldedit.regions.Region;
 import com.sk89q.worldguard.WorldGuard;
 import com.sk89q.worldguard.protection.ApplicableRegionSet;
+import com.sk89q.worldguard.protection.flags.BooleanFlag;
+import com.sk89q.worldguard.protection.flags.StateFlag;
 import com.sk89q.worldguard.protection.managers.RegionManager;
 import com.sk89q.worldguard.protection.regions.ProtectedCuboidRegion;
 import com.sk89q.worldguard.protection.regions.ProtectedRegion;
@@ -23,6 +25,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 import java.util.UUID;
+
+import static PSPlugins.buyingRegions.PrivateOperations.Confirm.WithdrawalMoney;
 
 public class PrivateOperations {
 
@@ -55,6 +59,21 @@ public class PrivateOperations {
 
     }
 
+    public static boolean parentHasPaidFlag(Player p )
+    {
+        try {
+            BuyingRegions plugin = (BuyingRegions) p.getServer().getPluginManager().getPlugin("BuyingRegions");
+            ProtectedRegion parentReg = GetRegionWithMaxPriority(p);
+
+            Boolean hasPaidFlag = parentReg.getFlag(plugin.PAID_FLAG);
+
+            if (hasPaidFlag == null || !hasPaidFlag) {psMessages.NotFoundParentRegion(p);return false;}
+            return true;
+        } catch (Exception e){ System.out.println("Error not found this plugin !###! " + e);}
+
+        return false;
+    }
+
 
 
     public static boolean privateNameCheck(Player p, String privateName) {
@@ -67,6 +86,9 @@ public class PrivateOperations {
 
         return true;
     }
+
+
+
 
     public  static boolean subPrivateIntersection(Player p)
     {
@@ -107,6 +129,7 @@ public class PrivateOperations {
 
 
 
+
         if(!regionId.equals("-1"))
         {
 
@@ -135,6 +158,7 @@ public class PrivateOperations {
             }
             if (regionId.equals(regionIdPos1) && regionId.equals(regionIdPos2))
             {
+
                 // допустимо создание суб привата
                 return true;
             }
@@ -146,6 +170,7 @@ public class PrivateOperations {
 
     } catch (Exception e) {return false;} return false;
     }
+
 
 
     public static void CreatePrivate(Player p, String privateName, Boolean isSub, BuyingRegions plugin)
@@ -160,7 +185,6 @@ public class PrivateOperations {
                 privat.setFlag(plugin.PAID_FLAG, true);
                 data.manager.addRegion(privat);
 
-
             }
         }else
         {
@@ -171,7 +195,9 @@ public class PrivateOperations {
                 privat.getOwners().addPlayer(p.getUniqueId());
 
                 ProtectedRegion parentReg = GetRegionWithMaxPriority(p);
+
                 if(parentReg != null) {
+
                     try {
 
                         privat.setParent(parentReg);
