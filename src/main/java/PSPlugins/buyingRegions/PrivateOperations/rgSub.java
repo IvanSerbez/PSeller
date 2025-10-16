@@ -19,15 +19,8 @@ public class rgSub {
         if(costDatabox == null) {return;}
 
 
-
-        if(!PrivateOperations.privateNameCheck(p,privateName))
-        {
-
-            psMessages.PrivateNameErrorMess(p);
-            return;
-        }else
-        {     p.setMetadata(mDataPrivateName, new FixedMetadataValue(plugin, privateName));
-        }
+        p.setMetadata(mDataPrivateName, new FixedMetadataValue(plugin, privateName));
+        if(!PrivateOperations.privateNameCheck(p,privateName))  {psMessages.PrivateNameErrorMess(p);return;}
 
 
         if(PrivateOperations.subPrivateIntersection(p))

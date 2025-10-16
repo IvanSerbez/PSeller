@@ -182,7 +182,6 @@ public class PrivateOperations {
                     privat.setFlag(plugin.PAID_FLAG, true);
                     data.manager.addRegion(privat);
                 }
-                // надо добавить приоритет. просмотр вложенных приватов (для отслеживания и назначения приоритетов)
 
 
             }
@@ -193,7 +192,7 @@ public class PrivateOperations {
     }
 
 
-    public static ProtectedRegion GetRegionWithMaxPriority(Player p)
+    private static ProtectedRegion GetRegionWithMaxPriority(Player p)
     {
         RegionDataBox data = new RegionDataBox(p);
 

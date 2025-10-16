@@ -34,7 +34,7 @@ static  String mDataPrivateName = "PrivateName";
        {
         if(PrivateOperations.privateNameCheck(p,privateName) && PrivateOperations.privatIntersectionCheck(p))
         {
-          byebyeMoney(p,false, plugin);
+          WithdrawalMoney(p,false, plugin);
         }
        }
     }
@@ -42,14 +42,14 @@ static  String mDataPrivateName = "PrivateName";
     private static void  confirmSubPrivate(Player p, BuyingRegions plugin)
     {
         if(!hasMoney(p,true))
-        { /* error */  return;}
-        p.sendMessage(hasMoney(p,false) + "has money  sub");
+        { psMessages.PrivateNotEnoughMoney(p);  return;}
+
         // получаем название будущего привата
         if(updatePrivateName(p))
         {
             if(PrivateOperations.privateNameCheck(p,privateName) && PrivateOperations.subPrivateIntersection(p))
             {
-                byebyeMoney(p,true, plugin);
+                WithdrawalMoney(p,true, plugin);
             }
         }
     }
@@ -65,7 +65,7 @@ static  String mDataPrivateName = "PrivateName";
     {
         CostDataBox costDataBox = Cost.getCostDataBox(p);
 
-        if(costDataBox == null) { /* error */ return false; }
+        if(costDataBox == null) { /* error */psMessages.NotFoundSelectionMess(p); return false; }
 
         ///  Проверка счета
         Economy economy = VaultHook.getEconomy();
@@ -81,12 +81,12 @@ static  String mDataPrivateName = "PrivateName";
     }
 
 
-    private static void byebyeMoney(Player p, Boolean isSub, BuyingRegions plugin) {
+    private static void WithdrawalMoney(Player p, Boolean isSub, BuyingRegions plugin) {
 
         CostDataBox costDataBox = Cost.getCostDataBox(p);
 
 
-        if (costDataBox == null) { /* error */}
+        if (costDataBox == null) { return;/* error */}
 
 
         ///  Проверка счета

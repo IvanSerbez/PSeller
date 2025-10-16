@@ -22,6 +22,8 @@ public class Cost {
         LocalSession session = WorldEdit.getInstance().getSessionManager().get(Player);
 
         try {
+
+
             Region region = session.getSelection(Player.getWorld());
             BlockVector3 pos1 = region.getMinimumPoint();
             BlockVector3 pos2 = region.getMaximumPoint();
@@ -38,36 +40,29 @@ public class Cost {
              return new CostDataBox(p,price,new Vector(sizeX,sizeY,sizeZ),summSize,pricesub);
 
 
-
-
-        } catch (Exception e) {
-
-            psMessages.NotFoundSelectionMess(p);
-            return null;
-        }
+        } catch (Exception e) {return null;}
 
     }
 
     public static void costRegion(Player p)
     {
 
-        CostDataBox dataBox = mathOperation(p);
-        if(dataBox !=null)
-        psMessages.CostMess(p,dataBox.price);
-
+        CostDataBox dataBox = getCostDataBox(p);
+        if(dataBox !=null) {
+            psMessages.CostMess(p, dataBox.price);
+        } else { psMessages.NotFoundSelectionMess(p);}
     }
 
     public static CostDataBox getCostDataBox(Player p)
     { CostDataBox dataBox = mathOperation(p);
-        if(dataBox != null){
-       return dataBox;} else return null;
+        if(dataBox != null){return dataBox;} else return null;
     }
 
     public static void sizeRegion(Player p)
     {
-        CostDataBox dataBox = mathOperation(p);
-        if(dataBox !=null)
-        psMessages.SizeMess(p,dataBox.summSize);
+        CostDataBox dataBox = getCostDataBox(p);
+        if(dataBox !=null) {
+        psMessages.SizeMess(p,dataBox.summSize);}else { psMessages.NotFoundSelectionMess(p);}
 
     }
 

@@ -14,6 +14,7 @@ public class rgBuy {
     static  String mDataPrivateName = "PrivateName";
 
 
+
     public static void buyRegion(Player p, String privateName, BuyingRegions plugin) {
 
         CostDataBox costDatabox = Cost.getCostDataBox(p);
@@ -21,13 +22,9 @@ public class rgBuy {
         p.setMetadata("ThisIsSubPrivate", new FixedMetadataValue(plugin, false));
 
 
-        if(!PrivateOperations.privateNameCheck(p,privateName))
-        {
-            psMessages.PrivateNameErrorMess(p);
-            return;
-        }else
-        {     p.setMetadata(mDataPrivateName, new FixedMetadataValue(plugin, privateName));
-        }
+        p.setMetadata(mDataPrivateName, new FixedMetadataValue(plugin, privateName));
+        if(!PrivateOperations.privateNameCheck(p,privateName)) {psMessages.PrivateNameErrorMess(p);return;}
+
 
         if(PrivateOperations.privatIntersectionCheck(p)) {
 
@@ -36,12 +33,8 @@ public class rgBuy {
                 Economy economy = VaultHook.getEconomy();
                 if (!economy.has(p, costDatabox.price)) {
                     psMessages.PrivateNotEnoughMoney(p);
-                    return;
-
-
-                } else {
-                    psMessages.PrivatePriceMess(p);
-            }
+                }
+                else {psMessages.PrivatePriceMess(p);}
 
             }
         }  else {psMessages.PrivateAreaErrorMess(p);}
