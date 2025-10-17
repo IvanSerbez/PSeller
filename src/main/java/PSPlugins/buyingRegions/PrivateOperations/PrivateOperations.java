@@ -1,7 +1,6 @@
 package PSPlugins.buyingRegions.PrivateOperations;
 
 import PSPlugins.buyingRegions.BuyingRegions;
-import PSPlugins.buyingRegions.Commands.PsCommand;
 import PSPlugins.buyingRegions.Messages.psMessages;
 import com.sk89q.worldedit.IncompleteRegionException;
 import com.sk89q.worldedit.LocalSession;
@@ -12,31 +11,27 @@ import com.sk89q.worldedit.math.BlockVector3;
 import com.sk89q.worldedit.regions.Region;
 import com.sk89q.worldguard.WorldGuard;
 import com.sk89q.worldguard.protection.ApplicableRegionSet;
-import com.sk89q.worldguard.protection.flags.BooleanFlag;
-import com.sk89q.worldguard.protection.flags.StateFlag;
 import com.sk89q.worldguard.protection.managers.RegionManager;
 import com.sk89q.worldguard.protection.regions.ProtectedCuboidRegion;
 import com.sk89q.worldguard.protection.regions.ProtectedRegion;
 import com.sk89q.worldguard.protection.regions.RegionContainer;
 import org.bukkit.World;
 import org.bukkit.entity.Player;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 import java.util.UUID;
 
-import static PSPlugins.buyingRegions.PrivateOperations.Confirm.WithdrawalMoney;
 
 public class PrivateOperations {
 
-   ;
 
+
+    /// проверка на пересечение региона с другими уже существующими регионами
     public static boolean privatIntersectionCheck(Player p) {
 
         RegionDataBox data = new RegionDataBox(p);
 
-            // проверка на пересечение региона с другими уже существующими регионами
             try {
                 ProtectedRegion test = new ProtectedCuboidRegion("dummy", data.pos1, data.pos2);
                 ApplicableRegionSet set = data.manager.getApplicableRegions(test);
@@ -89,18 +84,18 @@ public class PrivateOperations {
 
 
 
+    /// проверка на нахождение суб региона в платном регионе игрока
 
     public  static boolean subPrivateIntersection(Player p)
     {
-    RegionDataBox data = new RegionDataBox(p);
+        RegionDataBox data = new RegionDataBox(p);
 
-    // проверка на пересечение региона с другими уже существующими регионами
         try {
         ProtectedRegion test = new ProtectedCuboidRegion("dummy", data.pos1, data.pos2);
         ApplicableRegionSet set = data.manager.getApplicableRegions(test);
 
 
-        ///   //////////////////////////////// проверка на овнера для суб приватов
+        /// проверка на овнера для суб приватов
 
         String regionId = "-1", regionIdPos1 = null, regionIdPos2 = null;
 
@@ -108,23 +103,15 @@ public class PrivateOperations {
         List<ProtectedRegion> detectregion = new ArrayList<>();
         set.forEach(detectregion::add);
 
+        ///  проверка находится ли игрок в списке овнеров во всех найденных регионах пересечения.
         for (int i = 0; i < detectregion.size(); i++)
         {
             var hashReg = detectregion.get(i);
             Set<UUID> ownersList = hashReg.getOwners().getUniqueIds();
             for (UUID playerUUID : ownersList)
             {
-
-                if(playerUUID.equals(p.getUniqueId()))
-                {
-
-                    regionId = hashReg.getId();
-
-
-                }
+                if(playerUUID.equals(p.getUniqueId())) {regionId = hashReg.getId();}
             }
-
-
         }
 
 
@@ -133,7 +120,7 @@ public class PrivateOperations {
         if(!regionId.equals("-1"))
         {
 
-            // проверка что субприват находится в привате игрока (проверка первой и второй точки)
+            /// проверка что субприват находится в привате игрока (проверка первой и второй точки)
             ApplicableRegionSet parentRegPos1 = data.manager.getApplicableRegions(data.pos1);
             ApplicableRegionSet parentRegPos2 = data.manager.getApplicableRegions(data.pos2);
 
@@ -159,11 +146,11 @@ public class PrivateOperations {
             if (regionId.equals(regionIdPos1) && regionId.equals(regionIdPos2))
             {
 
-                // допустимо создание суб привата
+                /// допустимо создание суб региона
                 return true;
             }
 
-
+            ///  вне родительского платного региона. запрещено создание суб региона
             return false;
         }
 
@@ -172,7 +159,7 @@ public class PrivateOperations {
     }
 
 
-
+    ///  создание региона или суб региона. использовать только после снятия денег
     public static void CreatePrivate(Player p, String privateName, Boolean isSub, BuyingRegions plugin)
     {
         RegionDataBox data = new RegionDataBox(p);
@@ -204,7 +191,7 @@ public class PrivateOperations {
                     } catch (Exception e) {
                         return; /*Error NullParent*/
                     }
-                    privat.setPriority(parentReg.getPriority() + 1); // поменять на динамическое определение
+                    privat.setPriority(parentReg.getPriority() + 1);
                     privat.setFlag(plugin.PAID_FLAG, true);
                     data.manager.addRegion(privat);
                 }
@@ -218,6 +205,7 @@ public class PrivateOperations {
     }
 
 
+    /// возвращает регион с самым большим приоритетом
     private static ProtectedRegion GetRegionWithMaxPriority(Player p)
     {
         RegionDataBox data = new RegionDataBox(p);
@@ -261,6 +249,9 @@ public class PrivateOperations {
 
      return null;
     }
+
+
+    ///  Данные выделения WorldGuard     !!! Не путать с CostDataBox !!!
     public static class RegionDataBox {
 
         public BlockVector3 pos1, pos2;
@@ -289,9 +280,7 @@ public class PrivateOperations {
                 pos1 = region.getMinimumPoint();
                 pos2 = region.getMaximumPoint();
 
-            } catch (IncompleteRegionException e) {
-           //    psMessages.NotFoundSelectionMess(p);
-            }
+            } catch (IncompleteRegionException e) {}
 
 
         }

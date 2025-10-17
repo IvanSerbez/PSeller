@@ -47,15 +47,4 @@ public final class BuyingRegions extends JavaPlugin {
         // Plugin shutdown logic
     }
 
-    /*public void createCustomConfig() {
-        MessageConfig = new File(getDataFolder(), "Messages.yml");
-
-        if (!MessageConfig.exists()) {
-            MessageConfig.getParentFile().mkdirs();
-            saveResource("Messages.yml", false);
-        }
-
-        newConfig = YamlConfiguration.loadConfiguration(MessageConfig);
-    }*/
-
 }

@@ -7,7 +7,6 @@ import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.TabCompleter;
 import org.bukkit.entity.Player;
-
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -35,11 +34,11 @@ public class PsCommand implements CommandExecutor, TabCompleter {
 
 
             switch (args[0]) {
-                case "confirm":  Confirm.confirmBuying(p,plugin);    break;
-                case "cost":     Cost.costRegion(p);          break;
-                case "rgbuy":    if(args.length ==2 ){ rgBuy.buyRegion(p,args[1].toString(), plugin); } else { rgBuy.buyRegion(p); }   break;
+                case "confirm":  Confirm.confirmBuying(p,plugin);     break;
+                case "cost":     Cost.costRegion(p);                  break;
+                case "rgbuy":    if(args.length ==2 ){  rgBuy.buyRegion(p,args[1].toString(), plugin); } else { rgBuy.buyRegion(p); }   break;
                 case "rgsub":    if(args.length ==2 ){  rgSub.buySubPrivate(p,args[1].toString(), plugin); } else { rgSub.buySubPrivate(p); }   break;
-                case "size":     Cost.sizeRegion(p);     break;
+                case "size":     Cost.sizeRegion(p);                   break;
             }
 
             return  true;

@@ -4,7 +4,7 @@ import net.milkbowl.vault.economy.Economy;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.RegisteredServiceProvider;
 
-// я хз как это поключать. взял у ИИ
+
 
 public class VaultHook {
     private static Economy economy;
