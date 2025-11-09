@@ -2,6 +2,8 @@ package PSPlugins.buyingRegions;
 
 import PSPlugins.buyingRegions.Commands.PsCommand;
 import PSPlugins.buyingRegions.Files.MessagesConfig;
+import PSPlugins.buyingRegions.Files.OptionsConfig;
+import PSPlugins.buyingRegions.Files.PaidRegionBirthdayDataBase;
 import PSPlugins.buyingRegions.Hooks.VaultHook;
 
 import com.sk89q.worldguard.WorldGuard;
@@ -16,8 +18,8 @@ import java.io.File;
 public final class BuyingRegions extends JavaPlugin {
 
 
-    File MessageConfig;
-    FileConfiguration newConfig;
+   // File MessageConfig;
+    //FileConfiguration newConfig;
     PsCommand pscomm;
     public static final BooleanFlag PAID_FLAG = new BooleanFlag("paid");
     @Override
@@ -36,7 +38,9 @@ public final class BuyingRegions extends JavaPlugin {
         getCommand("ps").setExecutor(pscomm);
         getCommand("ps").setTabCompleter(pscomm);
 
-         MessagesConfig.setup();
+         MessagesConfig.setup(); /// создание конфига сообщений
+         OptionsConfig.setup(); /// создание конфига настроек
+        PaidRegionBirthdayDataBase.setup(); /// создание базы дат создания регионов
 
 
         VaultHook.setupEconomy(this);

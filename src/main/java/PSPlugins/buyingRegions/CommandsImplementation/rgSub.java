@@ -1,4 +1,4 @@
-package PSPlugins.buyingRegions.PrivateOperations;
+package PSPlugins.buyingRegions.CommandsImplementation;
 
 import PSPlugins.buyingRegions.BuyingRegions;
 import PSPlugins.buyingRegions.Hooks.VaultHook;

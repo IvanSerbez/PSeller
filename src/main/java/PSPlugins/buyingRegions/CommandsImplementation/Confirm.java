@@ -1,6 +1,7 @@
-package PSPlugins.buyingRegions.PrivateOperations;
+package PSPlugins.buyingRegions.CommandsImplementation;
 
 import PSPlugins.buyingRegions.BuyingRegions;
+import PSPlugins.buyingRegions.Files.GetOptionsConfig;
 import PSPlugins.buyingRegions.Hooks.VaultHook;
 import PSPlugins.buyingRegions.Messages.psMessages;
 import net.milkbowl.vault.economy.Economy;
@@ -19,9 +20,9 @@ static  String mDataPrivateName = "PrivateName";
         /// взятие данных выделения
        CostDataBox costDataBox = Cost.getCostDataBox(p);
 
-
+        GetOptionsConfig optionsConfig = new GetOptionsConfig();
        if (costDataBox == null) { psMessages.NotFoundSelectionMess(p);} else {
-           if(costDataBox.summSize > 20000000 || costDataBox.summSize < 0){ psMessages.ErrorLimitOfBlocks(p); return; }
+           if(costDataBox.summSize > optionsConfig.region_volume_max || costDataBox.summSize < optionsConfig.region_volume_min){ psMessages.ErrorLimitOfBlocks(p); return; }
            boolean thisIsSubPrivate = false;
 
            /// взятие кэша типа региона

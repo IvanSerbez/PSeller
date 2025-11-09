@@ -1,4 +1,4 @@
-package PSPlugins.buyingRegions.PrivateOperations;
+package PSPlugins.buyingRegions.CommandsImplementation;
 
 import PSPlugins.buyingRegions.BuyingRegions;
 import PSPlugins.buyingRegions.Messages.psMessages;
@@ -17,10 +17,9 @@ import com.sk89q.worldguard.protection.regions.ProtectedRegion;
 import com.sk89q.worldguard.protection.regions.RegionContainer;
 import org.bukkit.World;
 import org.bukkit.entity.Player;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Set;
-import java.util.UUID;
+
+import java.util.*;
+import java.util.stream.Collectors;
 
 
 public class PrivateOperations {
@@ -250,7 +249,6 @@ public class PrivateOperations {
      return null;
     }
 
-
     ///  Данные выделения WorldGuard     !!! Не путать с CostDataBox !!!
     public static class RegionDataBox {
 
@@ -286,5 +284,36 @@ public class PrivateOperations {
         }
 
 
+    }
+
+
+    private static void getPaidRegionData(Player p, Collection<ProtectedRegion> regions)
+    {
+
+    }
+
+    /// взятие списка всех ПЛАТНЫХ регионов в которых игрок является владельцем.
+    public static Collection<ProtectedRegion> getPaidPrivates(Player p)
+    {
+        RegionContainer container = WorldGuard.getInstance().getPlatform().getRegionContainer();
+        RegionManager manager = container.get((com.sk89q.worldedit.world.World) p.getWorld());
+
+
+        List<ProtectedRegion> ownedRegions = manager.getRegions().values().stream()
+                .filter(region -> region.isOwner(String.valueOf(p.getUniqueId())))
+                .collect(Collectors.toList());
+
+        BuyingRegions plugin = (BuyingRegions) p.getServer().getPluginManager().getPlugin("BuyingRegions");
+        try{
+            List<ProtectedRegion> paidRegions =
+                    ownedRegions.stream().filter(region -> region.getFlag(plugin.PAID_FLAG) && region.getParent() == null ).collect(Collectors.toList());
+            return paidRegions;
+        }catch (Exception e){ return null;}
+    }
+
+    /// Данные платного региона для сообщений
+    static public class PaidRegionDataBox{
+            String name;
+            int ID;
     }
 }

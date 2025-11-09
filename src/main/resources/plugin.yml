@@ -11,4 +11,4 @@ depend: [WorldGuard,WorldEdit,Vault]
 commands:
   ps:
     description: Операции для приобретения регионов
-    usage: /<command> <confirm|cost|rgbuy|rgsub|size>
+    usage: /<command> <confirm|cost|rgbuy|rgsub|size||eqe>

@@ -1,7 +1,8 @@
-package PSPlugins.buyingRegions.PrivateOperations;
+package PSPlugins.buyingRegions.CommandsImplementation;
 
 
 import PSPlugins.buyingRegions.BuyingRegions;
+import PSPlugins.buyingRegions.Files.GetOptionsConfig;
 import PSPlugins.buyingRegions.Hooks.VaultHook;
 import PSPlugins.buyingRegions.Messages.psMessages;
 import net.milkbowl.vault.economy.Economy;
@@ -19,6 +20,8 @@ public class rgBuy {
 
     ///  назначает тип и имя региона. после предлагает подтвердить покупку
     public static void buyRegion(Player p, String privateName, BuyingRegions plugin) {
+
+        GetOptionsConfig optionsConfig = new GetOptionsConfig();
 
         CostDataBox costDatabox = Cost.getCostDataBox(p);
         if(costDatabox == null) { psMessages.NotFoundSelectionMess(p);  return; }
@@ -46,7 +49,7 @@ public class rgBuy {
         ///  Проверка на пересечения регионов
         if(PrivateOperations.privatIntersectionCheck(p)) {
 
-            if (costDatabox.summSize > 20000000 || costDatabox.summSize < 0) {psMessages.ErrorLimitOfBlocks(p); return;}
+            if (costDatabox.summSize > optionsConfig.region_volume_max || costDatabox.summSize < optionsConfig.region_volume_min) {psMessages.ErrorLimitOfBlocks(p); return;}
             ///  Проверка баланса игрока
             if (costDatabox != null) {
                 Economy economy = VaultHook.getEconomy();
