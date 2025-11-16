@@ -8,7 +8,7 @@ public class GetOptionsConfig{
     private FileConfiguration config = OptionsConfig.get();
 
     public double start_cost, region_multiplier, region_ratio, volume_ratio ,subregion_cost;
-    public int region_volume_max, region_volume_min,subregion_volume_max,subregion_volume_min;
+    public int region_volume_max, region_volume_min,subregion_volume_max,subregion_volume_min,number_regions_page;
 
 
     public GetOptionsConfig() {
@@ -23,6 +23,8 @@ public class GetOptionsConfig{
             region_volume_min = config.getInt("region_volume_min");
             subregion_volume_max = config.getInt("subregion_volume_max");
             subregion_volume_min = config.getInt("subregion_volume_min");
+
+            number_regions_page = config.getInt("number_regions_page");
 
 
         } catch (Exception e) {

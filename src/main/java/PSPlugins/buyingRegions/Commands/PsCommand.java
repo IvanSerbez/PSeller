@@ -15,7 +15,7 @@ import java.util.List;
 public class PsCommand implements CommandExecutor, TabCompleter {
 
 
-    final List<String> subCommands = Arrays.asList("confirm","cost","rgbuy","rgsub","size");
+    final List<String> subCommands = Arrays.asList("confirm","cost","rgbuy","rgsub","size","list");
 
     public BuyingRegions plugin;
 
@@ -39,7 +39,7 @@ public class PsCommand implements CommandExecutor, TabCompleter {
                 case "rgbuy":    if(args.length ==2 ){  rgBuy.buyRegion(p,args[1].toString(), plugin); } else { rgBuy.buyRegion(p); }   break;
                 case "rgsub":    if(args.length ==2 ){  rgSub.buySubPrivate(p,args[1].toString(), plugin); } else { rgSub.buySubPrivate(p); }   break;
                 case "size":     Cost.sizeRegion(p);                   break;
-                case "list":     PsList.showList(p);                   break;
+                case "list":    if(args.length ==2){PsList.showList(p,args[1].toString());} else PsList.showList(p);                   break;
             }
 
             return  true;

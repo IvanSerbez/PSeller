@@ -53,5 +53,7 @@ public class PaidRegionBirthdayDataBase {
             value = paidRegionBirthdayDataBase.getString(key);} catch (Exception e) {}
         return value;
     }
+    public static String getPath(String PlayerName, String RegionID, String RegionWorldName){ return PlayerName+"#"+RegionID+"#"+RegionWorldName;}
+
 
 }

@@ -50,14 +50,15 @@ public class Cost {
 
 
             ///  Получаем кол-во платных приватов у игрока
-            int numberOfPrivates = 0;
+            int numberOfPrivates = 1;
             try {numberOfPrivates = PrivateOperations.getPaidPrivates(p).size();}catch (Exception e){}
+            if (numberOfPrivates == 0){numberOfPrivates = 1;}
 
             ///  формулы стоимости региона и суб региона
 
             int price = (int) (150 + (numberOfPrivates * optionsConfig.region_multiplier) + (10 / (1 + Math.exp(numberOfPrivates * optionsConfig.region_ratio))) * Math.sqrt(numberOfPrivates * optionsConfig.volume_ratio * summSize));
             /// ВАЖНО!!!! формула на суб приваты не официальная! Требуется замена на согласованную формулу.!!!
-            int pricesub = (int) (50 + (10 / (1 + Math.exp(numberOfPrivates * optionsConfig.region_ratio))) * Math.sqrt(numberOfPrivates * optionsConfig.volume_ratio * summSize));
+            int pricesub = (int) (50 + (10 / (1 + Math.exp(1 * optionsConfig.region_ratio))) * Math.sqrt(numberOfPrivates * optionsConfig.volume_ratio * summSize));
 
 
             /* Старые формулы

@@ -47,7 +47,7 @@ MessPriceConfrim: "&7Покупка такого региона будет ст�
 MessPriceSubConfirm: "&7Покупка такого суб-региона будет стоить &a&l%PRICE_SUB%&7&l$ &r&7Введите &a/ps confirm &7для подтверждения."
 
 # Строка со снятием денег за покупку (НЕ СУБ) региона
-MessWithdrawal: "&7С вашего баланса снято : &a&l%PRICE_SUB%&7&l$"
+MessWithdrawal: "&7С вашего баланса снято : &a&l%PRICE%&7&l$"
 
 # Строка со снятием денег за покупку (СУБ) региона
 MessWithdrawalSub: "&7С вашего баланса снято : &a&l%PRICE_SUB%&7&l$"
@@ -56,29 +56,40 @@ MessWithdrawalSub: "&7С вашего баланса снято : &a&l%PRICE_SUB
 
 # Сообщения ps list
 ############################################################################################################################################
+#  ВНИМАНИЕ!!!
+#       в стилях кнопок и сообщениях ps list НЕЛЬЗЯ использовать код "$#"
+#       Он создан для разделения текста [Text] + $# + [Button] + $# + [Text]
 
+
+# Сообщение на случай. когда у игрока нет платных регионов и он вводит команду ps list
+MessPsListNotFoundRegions: "&cУ вас ещё нет платных регионов!"
 
 # [MessHeader] + [MessPsListHeader]
-MessPsListHeader: "&c&l&n--------&f&cПлатные регионы %PLAYER_NAME% &c&l&n--------"
+MessPsListHeader: "&e&l&m--------&f&e Платные регионы %PLAYER_NAME% &e&l&m--------"
 
 # Сообщение в котором выводится регион и его данные.
 # Сообщение выводится столько раз. сколько всего платных регионов у игрока.
-MessPsListBody: "&d%NumberOfPaidPrivate%. &6%PaidPrivate% %PaidPrivateInfoButton%"
+MessPsListBody: "&d%NumberOfPaidPrivate%. &6%PaidPrivate% &3%BirthdayOfPaidPrivate% &7%PaidPrivateInfoButton%"
 
 # Завершающая список строка. (если у игрока мало регионов и нет нужды в переключениях страниц)
-MessPsListEnd: "&c&l&n----------------"
+MessPsListEnd: "&e&l&m------------------------------------------------"
 
 # Завершающая список строка. с кнопками переключения страницы списков (если у игрока много регионов)
-MessPsListPageButtons: "&c&l&n--------%PagePreviousButton%    %PageNextButton%--------"
+MessPsListPageButtons: "&e&l&m--------%PagePreviousButton%    %PageNextButton%&e&l&m--------"
 
-# Стиль кнопки [следующая страница] преобразуется в плейсхолдер %PageNextButton%
-StyleButtonPageNext: "[Далее]"
 
-# Стиль кнопки [предыдущая страница] преобразуется в плейсхолдер %PagePreviousButton%
-StyleButtonPagePrevious: "[Назад]"
+#========================================================#
+# Для стилей кнопок, пока что, использовать код цвета §  #
+#========================================================#
+
+# Стиль кнопки [/ps list N+1] преобразуется в плейсхолдер %PageNextButton%
+StyleButtonPageNext: "§7[Далее]"
+
+# Стиль кнопки [/ps list N-1] преобразуется в плейсхолдер %PagePreviousButton%
+StyleButtonPagePrevious: "§7[Назад]"
 
 #  Стиль кнопки [/rg info %PaidPrivate%] преобразуется в плейсхолдер  %PaidPrivateInfoButton%
-StyleButtonInfo: "[Info]"
+StyleButtonInfo: "§7[Info]"
 ############################################################################################################################################
 
 

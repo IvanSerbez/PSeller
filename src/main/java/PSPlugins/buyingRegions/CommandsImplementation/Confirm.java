@@ -51,9 +51,11 @@ static  String mDataPrivateName = "PrivateName";
            /// проверка на имя и пересечение - после снятие денег и создание региона
         if(PrivateOperations.privateNameCheck(p,privateName) && PrivateOperations.privatIntersectionCheck(p))
         {
-           WithdrawalMoney(p,false, plugin);
-
             psMessages.WithdrawalMoney(p);
+
+            WithdrawalMoney(p,false, plugin);
+
+
             psMessages.Privatebuy(p);
 
         }

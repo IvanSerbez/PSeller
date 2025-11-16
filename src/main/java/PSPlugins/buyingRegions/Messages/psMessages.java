@@ -1,20 +1,24 @@
 package PSPlugins.buyingRegions.Messages;
 import PSPlugins.buyingRegions.CommandsImplementation.PrivateOperations;
+import PSPlugins.buyingRegions.Files.GetOptionsConfig;
 import PSPlugins.buyingRegions.Files.MessagesConfig;
 import PSPlugins.buyingRegions.CommandsImplementation.Cost;
 import PSPlugins.buyingRegions.CommandsImplementation.CostDataBox;
+
 import PSPlugins.buyingRegions.Files.PaidRegionBirthdayDataBase;
 import com.sk89q.worldguard.protection.regions.ProtectedRegion;
-import org.apache.commons.lang.builder.ToStringBuilder;
+import net.md_5.bungee.api.chat.ClickEvent;
+
+import net.md_5.bungee.api.chat.HoverEvent;
+import net.md_5.bungee.api.chat.TextComponent;
+
 import org.bukkit.ChatColor;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 
-import java.lang.reflect.Type;
-import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
+
 import java.util.*;
-import java.util.stream.Collectors;
+
 
 public class psMessages {
 
@@ -58,93 +62,211 @@ public class psMessages {
         return PlaceHolders;
     }
 
-    /// сбор всех имен платных регионов и их даты создания.
-    private static Map<String,String> getRgListPlaceholders(Player p){
-        ///  сбор значений для Ps List
-        Collection<ProtectedRegion> regions = PrivateOperations.getPaidPrivates(p);
-        Map<String,String> birthdays = new HashMap<>();
-        for(ProtectedRegion region : regions) {   try {birthdays.put(region.getId(), PaidRegionBirthdayDataBase.getString(region.getId()));}catch (Exception e){continue;}}
 
-        /// ниже код от ИИ. мне пока что сложно разобраться с такой сортировкой
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd.MM.yyyy");
+    public static void SendTesButtonMessage(Player p){/* p.spigot().sendMessage( buttonsFormater(new TextComponent(message.messPsListBody),0,p));*/}
 
-        Map<String,String> sortedRegions = birthdays.entrySet()
-                .stream().sorted(Comparator.comparing(entry ->{
-                    String value = entry.getValue();
-                    if (value == null) return LocalDate.MIN;
+    private static TextComponent buttonsFormater(TextComponent messTextComp,int page,Player p)
+    {
+        String mess = messTextComp.getText();
+        mess = spaceFormatButton(mess);
+        mess = formatMessage(mess,p);
 
-                    try {return LocalDate.parse(value, formatter);} catch (Exception e) {return LocalDate.MIN;}
 
-                }))
-                .collect(Collectors.toMap(
-                        Map.Entry::getKey,
-                        Map.Entry::getValue,
-                        (e1, e2) -> e1,
-                        LinkedHashMap::new));
-        /// --------------------------------------------------------------------
-        return sortedRegions;
+        ///Преобразование текста в текстКомпанент для кликабельности кнопки
+        try {
+            TextComponent component = new TextComponent();
+            String[] words = mess.split("[$#]");
+            for (String word : words)
+            {
+
+                Map<String,String> regionsAndBirthdays = getRgListPlaceholders(p);
+                for (Map.Entry<String, String> regions : regionsAndBirthdays.entrySet())
+                {
+                    if(word.contains(regions.getKey()))
+                    {
+                        word = regions.getKey();
+                    }
+
+
+                //  word = formatMessage(word,p);
+                if(word.contains(message.styleButtonInfo))
+                {
+                    ///  функционал кнопок
+                  //  component.addExtra(new TextComponent(""));
+
+                    System.out.println("Btn world Info = " + word);
+                    TextComponent button = new TextComponent(word);
+                    button.setClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/rg info "+ regions));
+                    button.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT,new net.md_5.bungee.api.chat.hover.content.Text("Подробнее")));
+                    component.addExtra(button);
+                  //  component.addExtra(new TextComponent(""));
+
+                } else {
+
+                    component.addExtra(new TextComponent(word));
+                }
+                }
+            }
+
+            return component;
+        }catch (Exception e){ System.out.println("Exc ButtonFormater : " + e); return null;}
+
     }
 
 
+    /// сбор всех имен платных регионов и их даты создания.
+    private static Map<String,String> getRgListPlaceholders(Player p) {
+        ///  сбор значений для Ps List
+        try {
+
+
+            Collection<ProtectedRegion> regions = PrivateOperations.getPaidPrivates(p);
+            Map<String, String> birthdays = new HashMap<>();
+            for (ProtectedRegion region : regions) {
+                try {
+                    String pathBirthday = PaidRegionBirthdayDataBase.getPath(p.getName(),region.getId(),PrivateOperations.getWorld(region).getName());
+                    if(PaidRegionBirthdayDataBase.getString(pathBirthday) == null || PaidRegionBirthdayDataBase.getString(pathBirthday).isEmpty())
+                    {birthdays.put(region.getId(),"Null");} else {
+                    birthdays.put(region.getId(), PaidRegionBirthdayDataBase.getString(pathBirthday));}
+
+                } catch (Exception e) {System.out.println("Exc Birthday null:" + e); birthdays.put(region.getId(),"Null");}
+            }
+            return birthdays;
+
+        } catch (Exception e) {System.out.println("Exc " + e);   return null;}
+    }
+
+    private static TextComponent getPsListPageMess(Player p, int numberOfPage)
+    {
+        try {
+            List<TextComponent> messages = new ArrayList<>();
+            messages.add(new TextComponent(formatMessage(message.messPsListHeader,p)));
+            messages.add(new TextComponent(getPsListPages(p).get(numberOfPage)));
+            messages.add(new TextComponent(formatMessage(message.messPsListEnd,p)));
+            return  compactMessages(messages);
+        }catch (Exception e){System.out.println("Exc getPsListPageMess : " +e); return null;}
+
+
+
+    }
+
     ///  форматирование многострочного сообщения Ps list
-    private static List<String> formatPsListMessage(Player p){
-        Map<String,String> mapRegionPlaceholders = getRgListPlaceholders(p);
+    private static List<TextComponent> getPsListPages(Player p){
+        try {
+
+            int number_regions = PrivateOperations.getPaidPrivates(p).size();
+            int number_regions_per_page = new GetOptionsConfig().number_regions_page;
+            
+
+            ///  собранные  страницы.
+            List<TextComponent> pages_mess = new ArrayList<>();
+
+            /// кэшевый сборщик страниц
+            List<TextComponent> cash_page_mess = new ArrayList<>();
+
+            /// список значений для плейсхолдеров ps list
+         Map<String,String> regionsAndBirthdays = getRgListPlaceholders(p);
+
         String placeholderRegionIDKey =         "%PaidPrivate%";
         String placeholderRegionNumberKey =     "%NumberOfPaidPrivate%";
         String placeholderRegionBirthdayKey =   "%BirthdayOfPaidPrivate%";
-        String placeholderPageNextButtonKey =   "%PageNextButton%";
-        String placeholderPagePreviousKey =     "%PagePreviousButton%";
-        String placeholderRegionInfoButtonKey = "%PaidPrivateInfoButton%";
 
         ///  список сообщений Ps list.
-        List<String> psListMessages = new ArrayList<>();
-        psListMessages.add(message.messPsListHeader);
-        psListMessages.add(message.messPsListBody);
-        psListMessages.add(message.messPsListEnd);
+        String body   =  message.messPsListBody;
 
-        List<String> formatMessList = new ArrayList<>();
+
+        /// готовые сообщения
+        List<TextComponent> formatMessList = new ArrayList<>();
+
+          ///  formatMessList.add(formatMessage(header,p));
 
         int regionIterator = 0;
-        boolean iteration = false;
+            Map<String,String> placeHolders = GetPlaceHolders(p);
 
-
-        ///  перебор сообщений ps list
-        for(String mess : psListMessages)
-        {
             ///  перебор плейсхолдеров ps list
-        for(Map.Entry<String,String> entry : mapRegionPlaceholders.entrySet())
-        {
+            if (regionsAndBirthdays != null && !regionsAndBirthdays.isEmpty()) {
+         for(Map.Entry<String,String> entry : regionsAndBirthdays.entrySet())
+          {
+
+              /// перебор стандартных плейсхолдеров
+              for(Map.Entry<String,String> i : placeHolders.entrySet())
+              {
+                  String key = i.getKey();
+                  String value = i.getValue();
+
+                  if(body.contains(key)) {body = body.replace(key,value);}
+
+              }
+              String cashBodyMess = body;
+
             /// mapRegionPlaceholders <String RegionID,String Birthday>
             String numberOfRegion = new String(""+regionIterator);
-            String keyRegID = entry.getKey();
             String valueBirthday = entry.getValue();
-            iteration = false;
-            if(mess.contains(placeholderRegionIDKey)) { mess = mess.replace(placeholderRegionIDKey,keyRegID); iteration = true; }
-            if(mess.contains(placeholderRegionBirthdayKey)) { mess = mess.replace(placeholderRegionBirthdayKey,valueBirthday); iteration =true;}
-            if(mess.contains(placeholderRegionNumberKey)) {mess = mess.replace(placeholderRegionNumberKey,numberOfRegion); iteration = true;}
 
-            if(iteration){regionIterator++;}
-        }
+            String keyRegID = entry.getKey();
 
 
-        Map<String,String> placeHolders = GetPlaceHolders(p);
+              /// замена плейсхолдеров
+            if(cashBodyMess.contains(placeholderRegionIDKey)) { cashBodyMess = cashBodyMess.replace(placeholderRegionIDKey,keyRegID);}
+            if(cashBodyMess.contains(placeholderRegionBirthdayKey)) { cashBodyMess = cashBodyMess.replace(placeholderRegionBirthdayKey,valueBirthday); }
+            if(cashBodyMess.contains(placeholderRegionNumberKey)) {cashBodyMess=  cashBodyMess.replace(placeholderRegionNumberKey,numberOfRegion);}
 
-        /// перебор стандартных плейсхолдеров
-        for(Map.Entry<String,String> entry : placeHolders.entrySet())
-        {
-            String key = entry.getKey();
-            String value = entry.getValue();
 
-            if(mess.contains(key)) {mess = mess.replace(key,value);}
 
-        }
+            ///  смещение итератора
+              regionIterator++;
 
-        String formatMess = ChatColor.translateAlternateColorCodes('&', mess);
-        formatMessList.add(formatMess);
+              ///  строка с цветом и заменой плейсхолдеров  
+              String formatMess = ChatColor.translateAlternateColorCodes('&', cashBodyMess);
 
-        }
+              ///  преобразование строки в кнопку
+             // TextComponent formatted = buttonsFormater(formatMess, entry.getKey(), -1, p);
 
-        return formatMessList;
+
+              /// добавление строки в список всех регионов и их строк (требуется разделение на страницы)
+              formatMessList.add(new TextComponent(formatMess));}
+
+            } else { System.out.println(" mapRegionPlaceholders Exc "); }
+
+            ///  итератор-костыль. для определения начала страницы.
+            int pages_iter = 1;
+            /// Сборщик страниц
+            for (int i = 0; i < number_regions; i++)
+            {
+                /// сбор строк в "Страницу без индекса"
+
+
+                cash_page_mess.add(formatMessList.get(i));
+
+                TextComponent formatted = buttonsFormater(formatMessList.get(i), -1, p);
+                System.out.println(formatted.getText());
+
+                ///  разделитель страниц
+                if(i == number_regions_per_page*pages_iter || i == number_regions -1)
+                {
+                    ///  добавление страницы в список страниц
+                    pages_mess.add(compactMessages(cash_page_mess));
+                    ///  очистка данной страницы. что бы исключить дублирование страниц
+                    cash_page_mess = new ArrayList<>();
+
+
+                }
+
+
+            }
+
+        return pages_mess;
+        } catch (Exception e) { System.out.println("Exc getPsListPageMessage :" + e);return null; }
+    }
+
+    /// метод для форматирования кнопок. добавляет коды для работы кнопок. добавляет стиль кнопок. но не красит их в цвет.
+    /// Использовать перед основным методом formatMessage
+    private  static String spaceFormatButton(String button)
+    {
+        if(button.contains("%PaidPrivateInfoButton%")){ button = button.replace("%PaidPrivateInfoButton%","$#"+message.styleButtonInfo+"$#"); }
+        if(button.contains("%PagePreviousButton%")) {button = button.replace("%PagePreviousButton%","$#"+message.styleButtonPagePrevious+"$#");}
+        if(button.contains("%PageNextButton%")){button = button.replace("%PageNextButton%","$#"+message.styleButtonPageNext+"$#");}
+        return button;
     }
 
     ///  форматирует заготовленные сообщения в формат сообщений для чата игры (цвет, стиль)
@@ -168,10 +290,19 @@ public class psMessages {
 
 
     ///  Компановщик сообщений ps list. Преоброзует список строк в одно сообщение с переходами на новую строку. вызывать перед отправкой сообщения игроку
-    private static String CompactPsListMessages(List<String> list)
+    private static TextComponent compactMessages(List<TextComponent> list)
     {
-        String compactMess = "";
-        for(String  message : list){ compactMess = compactMess + message + "\n"; }
+
+        TextComponent compactMess = new TextComponent();
+        for (TextComponent message : list) {
+            compactMess.addExtra(new TextComponent(""));
+            compactMess.addExtra(message);
+            compactMess.addExtra(new TextComponent(""));
+
+            if(message != list.getLast()){
+            compactMess.addExtra(new TextComponent("\n"));}
+        }
+
         return compactMess;
     }
 
@@ -183,8 +314,8 @@ public class psMessages {
 
     ///  сообщения подсчета выделения
     public static void CostMess(Player p, int summSize)
-    {
-        if(summSize > 20000000 || summSize < 0)
+    {  GetOptionsConfig optionsConfig = new GetOptionsConfig();
+        if(summSize > optionsConfig.region_volume_max || summSize < optionsConfig.region_volume_min)
         {
             ErrorLimitOfBlocks(p);
         }
@@ -198,7 +329,8 @@ public class psMessages {
     public  static void SizeMess(Player p, int summSize)
     {
 
-        if(summSize > 20000000 || summSize < 0)
+        GetOptionsConfig optionsConfig = new GetOptionsConfig();
+        if(summSize > optionsConfig.region_volume_max || summSize < optionsConfig.region_volume_min)
         {
             p.sendMessage(formatMessage(message.messErrorLimitOfBlocks,p));
 
@@ -209,7 +341,14 @@ public class psMessages {
         p.sendMessage(formatMessage(message.messSizeRegionXYZ,p));
     }
 
-    public static void PsListMessages(Player p) { p.sendMessage(CompactPsListMessages(formatPsListMessage(p))); }
+    public static void PsListMessages(Player p,int numberOfPage)
+    {
+        if(PrivateOperations.getPaidPrivates(p) == null || PrivateOperations.getPaidPrivates(p).isEmpty())
+        {p.sendMessage(formatMessage(message.messPsListNotFoundRegions,p));}
+        else
+            p.spigot().sendMessage(getPsListPageMess(p,numberOfPage));
+    }
+
     ///  сообщение. суб приват не находится в платном привате игрока
     public static void  NotFoundParentRegion(Player p)
     {
@@ -325,6 +464,7 @@ public class psMessages {
         String messPsListBody;
         String messPsListEnd;
         String messPsListPageButtons;
+        String messPsListNotFoundRegions;
 
         String styleButtonPageNext;
         String styleButtonPagePrevious;
@@ -358,10 +498,11 @@ public class psMessages {
 
 
 
+            messPsListNotFoundRegions = messHeader + config.getString("MessPsListNotFoundRegions");
             messPsListHeader = messHeader + config.getString("MessPsListHeader");
-            messPsListBody = config.getString("MessPsListBody");
-            messPsListEnd = config.getString("MessPsListEnd");
-            messPsListPageButtons = config.getString("MessPsListPageButtons");
+            messPsListBody =  config.getString("MessPsListBody");
+            messPsListEnd = messHeader + config.getString("MessPsListEnd");
+            messPsListPageButtons = messHeader + config.getString("MessPsListPageButtons");
 
             styleButtonPageNext = config.getString("StyleButtonPageNext");
             styleButtonPagePrevious = config.getString("StyleButtonPagePrevious");
