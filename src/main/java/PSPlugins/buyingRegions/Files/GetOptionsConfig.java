@@ -7,13 +7,14 @@ public class GetOptionsConfig{
 
     private FileConfiguration config = OptionsConfig.get();
 
-    public double start_cost, region_multiplier, region_ratio, volume_ratio ,subregion_cost;
+    public double start_cost, region_multiplier, region_ratio, volume_ratio ,subregion_cost,start_sub_cost;
     public int region_volume_max, region_volume_min,subregion_volume_max,subregion_volume_min,number_regions_page;
 
 
     public GetOptionsConfig() {
         try {
             start_cost = config.getDouble("start_cost");
+            start_sub_cost = config.getDouble("start_sub_cost");
             region_multiplier = config.getDouble("region_multiplier");
             region_ratio = config.getDouble("region_ratio");
             volume_ratio = config.getDouble("volume_ratio");

@@ -62,10 +62,6 @@ public class psMessages {
         return PlaceHolders;
     }
 
-
-    public static void SendTesButtonMessage(Player p){/* p.spigot().sendMessage( buttonsFormater(new TextComponent(message.messPsListBody),0,p));*/}
-
-
     ///  получаем название региона из текст компонента, если он там есть. иначе null
     private static String parseRegionIDFromTextComponent(TextComponent component, Player p)
     {
@@ -85,6 +81,7 @@ public class psMessages {
         return parse;
     }
 
+    /// добавление функционала кнопок
     private static TextComponent buttonsFormater(TextComponent messTextComp, int currentPage, Player p) {
         String mess = messTextComp.getText();
         mess = spaceFormatButton(formatMessage(mess, p));
@@ -189,8 +186,9 @@ public class psMessages {
             messages.add(new TextComponent(getPsListPages(p).get(numberOfPage)));
 
             ///  получаем кол-во страниц для определения psList end
+            int number_regions = PrivateOperations.getPaidPrivates(p).size();
            int pages = (int) Math.ceil((double) new GetOptionsConfig().number_regions_page / (double)PrivateOperations.getPaidPrivates(p).size());
-           if(pages==0){  messages.add(new TextComponent(formatMessage(message.messPsListEnd,p))); }else
+           if(pages==0 || number_regions == new GetOptionsConfig().number_regions_page){  messages.add(new TextComponent(formatMessage(message.messPsListEnd,p))); }else
            {messages.add(new TextComponent(buttonsFormater(new TextComponent(message.messPsListPageButtons),numberOfPage,p)));}
 
             return  compactMessages(messages);
@@ -230,7 +228,7 @@ public class psMessages {
 
           ///  formatMessList.add(formatMessage(header,p));
 
-        int regionIterator = 0;
+        int regionIterator = 1;
             Map<String,String> placeHolders = GetPlaceHolders(p);
 
             ///  перебор плейсхолдеров ps list
@@ -279,18 +277,18 @@ public class psMessages {
             ///  итератор-костыль. для определения начала страницы.
             int pages_iter = 1;
             /// Сборщик страниц
-            for (int i = 0; i < number_regions; i++)
+            for (int i = 1; i <= number_regions; i++)
             {
                 /// сбор строк в "Страницу без индекса"
 
 
-                cash_page_mess.add(formatMessList.get(i));
+                cash_page_mess.add(formatMessList.get(i-1));
 
                 //TextComponent formatted = buttonsFormater(formatMessList.get(i), -1, p);
 
 
                 ///  разделитель страниц
-                if(i == number_regions_per_page*pages_iter || i == number_regions -1)
+                if(i == number_regions_per_page*pages_iter || i == number_regions)
                 {
                     ///  добавление страницы в список страниц
                     pages_mess.add(compactMessages(cash_page_mess));
@@ -308,7 +306,6 @@ public class psMessages {
     }
 
     /// метод для форматирования кнопок. добавляет коды для работы кнопок. добавляет стиль кнопок. но не красит их в цвет.
-    /// Использовать перед основным методом formatMessage
     private  static String spaceFormatButton(String button)
     {
         if(button.contains("%PaidPrivateInfoButton%")){ button = button.replace("%PaidPrivateInfoButton%","$#"+message.styleButtonInfo+"$#"); }

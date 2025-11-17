@@ -2,6 +2,7 @@ package PSPlugins.buyingRegions.CommandsImplementation;
 
 import PSPlugins.buyingRegions.BuyingRegions;
 import PSPlugins.buyingRegions.Files.GetOptionsConfig;
+import PSPlugins.buyingRegions.Files.OptionsConfig;
 import PSPlugins.buyingRegions.Messages.psMessages;
 import com.sk89q.worldedit.LocalSession;
 import com.sk89q.worldedit.WorldEdit;
@@ -56,16 +57,11 @@ public class Cost {
 
             ///  формулы стоимости региона и суб региона
 
-            int price = (int) (150 + (numberOfPrivates * optionsConfig.region_multiplier) + (10 / (1 + Math.exp(numberOfPrivates * optionsConfig.region_ratio))) * Math.sqrt(numberOfPrivates * optionsConfig.volume_ratio * summSize));
+            int price = (int) (optionsConfig.start_cost + (numberOfPrivates * optionsConfig.region_multiplier) + (10 / (1 + Math.exp(numberOfPrivates * optionsConfig.region_ratio))) * Math.sqrt(numberOfPrivates * optionsConfig.volume_ratio * summSize));
             /// ВАЖНО!!!! формула на суб приваты не официальная! Требуется замена на согласованную формулу.!!!
-            int pricesub = (int) (50 + (10 / (1 + Math.exp(1 * optionsConfig.region_ratio))) * Math.sqrt(numberOfPrivates * optionsConfig.volume_ratio * summSize));
+            int pricesub = (int) (optionsConfig.start_sub_cost +(1 * optionsConfig.region_multiplier) + (10 / (1 + Math.exp(1 * optionsConfig.region_ratio))) * Math.sqrt(numberOfPrivates * optionsConfig.subregion_cost * summSize ));
 
-
-            /* Старые формулы
-                         //C = 200 + (-0.0000004 * X^2 * Z^2 + 0.40 * X * Z) * (1 + Y / 512)
-            int price = (int)(200 + (-0.0000004 * Math.pow(sizeX,2) * Math.pow(sizeZ,2) + 0.40 * sizeX * sizeZ) * (1 + (double) sizeY / 512));
-            int pricesub = (int)(200 + (-0.0000004 * Math.pow(sizeX,2) * Math.pow(sizeZ,2) + 0.40 * sizeX * sizeZ) * (1 + (double) sizeY / 512)*25/100);
-            */
+            
             /// возвращает Класс данных выделения,m
              return new CostDataBox(p,price,new Vector(sizeX,sizeY,sizeZ),summSize,pricesub,numberOfPrivates);
 
