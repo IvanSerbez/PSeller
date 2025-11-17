@@ -85,25 +85,26 @@ public class psMessages {
         return parse;
     }
 
-    private static TextComponent buttonsFormater(TextComponent messTextComp, int page, Player p) {
+    private static TextComponent buttonsFormater(TextComponent messTextComp, int currentPage, Player p) {
         String mess = messTextComp.getText();
         mess = spaceFormatButton(formatMessage(mess, p));
-        System.out.println("DummyMess =="+mess);
 
         try {
             TextComponent component = new TextComponent();
             String[] words = mess.split("[$#]");
             String regionID = null;
+            boolean thisIsButton = false;
 
             for (String word : words) {
-                System.out.println("Word == " + word);
+                thisIsButton=false;
 
+                ///  взятие названия региона для команды кнопки
                 if(word != null && !word.isEmpty() && parseRegionIDFromTextComponent(new TextComponent(word),p) != null) {
                 regionID = parseRegionIDFromTextComponent(new TextComponent(word), p);}
-                System.out.println("RegID =="+ regionID);
-               // String infoMess =
-                if (word.contains(message.styleButtonInfo))/* && regionID != null && !regionID.isEmpty())*/{
-                    System.out.println("Word contains == "+word );
+
+                /// создание кнопки rg info regionID
+                if (word.contains(message.styleButtonInfo)){
+
                     TextComponent button = new TextComponent(formatMessage(word, p));
                     button.setClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/rg info " + regionID));
                     button.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new net.md_5.bungee.api.chat.hover.content.Text("Подробнее")));
@@ -111,10 +112,43 @@ public class psMessages {
                     component.addExtra(new TextComponent(" "));
                     component.addExtra(button);
                     component.addExtra(new TextComponent(" "));
-                } else {
-                    component.addExtra(new TextComponent(formatMessage(word, p)));
+                    thisIsButton = true;
+                } else  {
+
                 }
+
+                /// создание кнопки /ps list N+1
+                if(word.contains(message.styleButtonPageNext))
+                {
+
+                    int nextPage = currentPage+2;
+
+                    TextComponent button = new TextComponent(formatMessage(word, p));
+                    button.setClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/ps list " + nextPage));
+                    button.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new net.md_5.bungee.api.chat.hover.content.Text(">>>")));
+                    component.addExtra(new TextComponent(" "));
+                    component.addExtra(button);
+                    component.addExtra(new TextComponent(" "));
+                    thisIsButton = true;
+                }
+                /// создание кнопки /ps list N-1
+                if(word.contains(message.styleButtonPagePrevious))
+                {
+
+                    int previousPage = currentPage;
+                    TextComponent button = new TextComponent(formatMessage(word, p));
+                    button.setClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/ps list " + previousPage));
+                    button.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new net.md_5.bungee.api.chat.hover.content.Text("<<<")));
+                    component.addExtra(new TextComponent(" "));
+                    component.addExtra(button);
+                    component.addExtra(new TextComponent(" "));
+                    thisIsButton = true;
+                }
+                if(!thisIsButton){component.addExtra(new TextComponent(formatMessage(word, p)));}
             }
+
+
+
             return component;
         } catch (Exception e) {
             System.out.println("Exc ButtonFormater : " + e);
@@ -153,7 +187,12 @@ public class psMessages {
             List<TextComponent> messages = new ArrayList<>();
             messages.add(new TextComponent(formatMessage(message.messPsListHeader,p)));
             messages.add(new TextComponent(getPsListPages(p).get(numberOfPage)));
-            messages.add(new TextComponent(formatMessage(message.messPsListEnd,p)));
+
+            ///  получаем кол-во страниц для определения psList end
+           int pages = (int) Math.ceil((double) new GetOptionsConfig().number_regions_page / (double)PrivateOperations.getPaidPrivates(p).size());
+           if(pages==0){  messages.add(new TextComponent(formatMessage(message.messPsListEnd,p))); }else
+           {messages.add(new TextComponent(buttonsFormater(new TextComponent(message.messPsListPageButtons),numberOfPage,p)));}
+
             return  compactMessages(messages);
         }catch (Exception e){System.out.println("Exc getPsListPageMess : " +e); return null;}
 
@@ -232,8 +271,6 @@ public class psMessages {
 
               ///  преобразование строки в кнопку
                TextComponent formatted = buttonsFormater(new TextComponent(formatMess), -1, p);
-              System.out.println("FormattedText =" +formatted.getText());
-              System.out.println("FormattedText =" +formatted.getFont());
               /// добавление строки в список всех регионов и их строк (требуется разделение на страницы)
               formatMessList.add(formatted);}
 

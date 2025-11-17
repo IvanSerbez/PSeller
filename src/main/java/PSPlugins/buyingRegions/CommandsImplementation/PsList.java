@@ -26,21 +26,16 @@ public class PsList {
             Matcher matcher = pattern.matcher(numberOfPageStr);
             if(matcher.find())
             {numberOfPage = Integer.parseInt(matcher.group());}
-            if(numberOfPage>pages){numberOfPage = pages;} else if(numberOfPage <= 0) {numberOfPage = 0;} else {numberOfPage = numberOfPage-1;}
+            if(numberOfPage>pages){numberOfPage = pages;}
+            else if(numberOfPage <= 0) {numberOfPage = 0;}
+            else {numberOfPage = numberOfPage-1;}
             psMessages.PsListMessages(p,numberOfPage);
 
         }catch (Exception e){System.out.println("Exc ShowList : "+ e);}
     }
 
     public static void showList(Player p)
-    {
-        try {
-            psMessages.PsListMessages(p,0);
-        }catch (Exception e){System.out.println("Exc ShowList : "+ e);}
-
-        try {
-            psMessages.SendTesButtonMessage(p);
-        }catch (Exception e){System.out.println("Exc TestButtonMess ="+ e);}
+    { showList(p,"0");
     }
 
 
