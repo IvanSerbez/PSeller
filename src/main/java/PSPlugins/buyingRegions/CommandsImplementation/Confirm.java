@@ -31,7 +31,7 @@ static  String mDataPrivateName = "PrivateName";
            }
 
 
-           if (thisIsSubPrivate) {
+           if (!thisIsSubPrivate) {
                if(costDataBox.summSize > optionsConfig.region_volume_max)
                {psMessages.ErrorLimitOfBlocks(p); return; }
                else if ( costDataBox.summSize < optionsConfig.region_volume_min)
