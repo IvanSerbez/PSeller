@@ -36,13 +36,14 @@ static  String mDataPrivateName = "PrivateName";
                {psMessages.ErrorLimitOfBlocks(p); return; }
                else if ( costDataBox.summSize < optionsConfig.region_volume_min)
                { psMessages.ErrorMinLimitOfBlock(p); return; }
-               confirmSubPrivate(p, plugin);
+               confirmPrivate(p, plugin);
            } else {
                if(costDataBox.summSize > optionsConfig.subregion_volume_max)
                { psMessages.ErrorSubLimitOfBlock(p); return; }
                else if (costDataBox.summSize < optionsConfig.subregion_volume_min)
                { psMessages.ErrorMinimalSubLimitOfBlock(p); return; }
-               confirmPrivate(p, plugin);
+               confirmSubPrivate(p, plugin);
+
            }
        }
     }
