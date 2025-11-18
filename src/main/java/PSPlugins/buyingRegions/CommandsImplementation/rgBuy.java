@@ -49,7 +49,12 @@ public class rgBuy {
         ///  Проверка на пересечения регионов
         if(PrivateOperations.privatIntersectionCheck(p)) {
 
-            if (costDatabox.summSize > optionsConfig.region_volume_max || costDatabox.summSize < optionsConfig.region_volume_min) {psMessages.ErrorLimitOfBlocks(p); return;}
+
+            if (costDatabox.summSize > optionsConfig.region_volume_max)
+            {psMessages.ErrorLimitOfBlocks(p); return;}
+            else if(costDatabox.summSize < optionsConfig.region_volume_min)
+            {psMessages.ErrorMinLimitOfBlock(p); return;}
+
             ///  Проверка баланса игрока
             if (costDatabox != null) {
                 Economy economy = VaultHook.getEconomy();

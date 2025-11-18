@@ -58,6 +58,8 @@ public class PrivateOperations {
 
     }
 
+
+    /// проверка наличия признака платного привата у родителя
     public static boolean parentHasPaidFlag(Player p )
     {
         try {
@@ -68,13 +70,14 @@ public class PrivateOperations {
 
             if (hasPaidFlag == null || !hasPaidFlag) {psMessages.NotFoundParentRegion(p);return false;}
             return true;
-        } catch (Exception e){ System.out.println("Error not found this plugin !###! " + e);}
+        } catch (Exception e){ System.out.println("Exc parentHasPaidFlag " + e);}
 
         return false;
     }
 
 
 
+    ///  проверка актуальности названия региона.
     public static boolean privateNameCheck(Player p, String privateName) {
 
        RegionDataBox data = new RegionDataBox(p);
@@ -89,7 +92,6 @@ public class PrivateOperations {
 
 
     /// проверка на нахождение суб региона в платном регионе игрока
-
     public  static boolean subPrivateIntersection(Player p)
     {
         RegionDataBox data = new RegionDataBox(p);
@@ -192,6 +194,11 @@ public class PrivateOperations {
                 /// добавление даты создания
                 String path = PaidRegionBirthdayDataBase.getPath(p.getName(),privat.getId(),data.bukkitWorld.getName());
                 PaidRegionBirthdayDataBase.addString(path,GetTime());
+                /// удаление метадаты игрока
+            if (p.hasMetadata("PrivateName")){p.removeMetadata("PrivateName",plugin);}
+            if (p.hasMetadata("ThisIsSubPrivate")) {p.removeMetadata("ThisIsSubPrivate",plugin);}
+
+
             }
         }else
         {
@@ -214,6 +221,10 @@ public class PrivateOperations {
                     privat.setPriority(parentReg.getPriority() + 1);
                     privat.setFlag(plugin.PAID_FLAG, true);
                     data.manager.addRegion(privat);
+                    /// удаление метадаты игрока
+                    if (p.hasMetadata("PrivateName")){p.removeMetadata("PrivateName",plugin);}
+                    if (p.hasMetadata("ThisIsSubPrivate")) {p.removeMetadata("ThisIsSubPrivate",plugin);}
+
 
                 }
 
@@ -271,6 +282,7 @@ public class PrivateOperations {
      return null;
     }
 
+    ///получение строки для поиска дат создания
     private static String GetTime()
     {
 
@@ -281,7 +293,36 @@ public class PrivateOperations {
         return Date;
     }
 
-    ///получение строки для поиска дат создания
+
+
+
+    /// взятие списка всех ПЛАТНЫХ регионов в которых игрок является владельцем.
+    /// не считая приваты у которых есть родитель
+    public static Collection<ProtectedRegion> getPaidPrivates(Player p)
+    {
+        RegionContainer container = WorldGuard.getInstance().getPlatform().getRegionContainer();
+        com.sk89q.worldedit.world.World weWorld = BukkitAdapter.adapt(p.getWorld());
+        RegionManager manager = container.get(weWorld);
+
+        UUID uuid = p.getUniqueId();
+        String name = p.getName();
+
+        List<ProtectedRegion> ownedRegions = manager.getRegions().values().stream()
+                .filter(region ->
+                        region.getOwners().contains(uuid) || region.getOwners().contains(name)
+                )
+                .collect(Collectors.toList());
+
+        BuyingRegions plugin = (BuyingRegions) p.getServer().getPluginManager().getPlugin("BuyingRegions");
+        try{
+            List<ProtectedRegion> paidRegions =
+                    ownedRegions.stream().filter(region -> region.getFlag(plugin.PAID_FLAG) && region.getParent() == null ).collect(Collectors.toList());
+
+            return paidRegions;
+        }catch (Exception e){e.printStackTrace();  return Collections.emptyList();}
+    }
+
+
 
     ///  Данные выделения WorldGuard     !!! Не путать с CostDataBox !!!
     public static class RegionDataBox {
@@ -322,31 +363,5 @@ public class PrivateOperations {
 
 
 
-
-    /// взятие списка всех ПЛАТНЫХ регионов в которых игрок является владельцем.
-    /// не считая приваты у которых есть родитель
-    public static Collection<ProtectedRegion> getPaidPrivates(Player p)
-    {
-        RegionContainer container = WorldGuard.getInstance().getPlatform().getRegionContainer();
-        com.sk89q.worldedit.world.World weWorld = BukkitAdapter.adapt(p.getWorld());
-        RegionManager manager = container.get(weWorld);
-
-        UUID uuid = p.getUniqueId();
-        String name = p.getName();
-
-        List<ProtectedRegion> ownedRegions = manager.getRegions().values().stream()
-                .filter(region ->
-                        region.getOwners().contains(uuid) || region.getOwners().contains(name)
-                )
-                .collect(Collectors.toList());
-
-        BuyingRegions plugin = (BuyingRegions) p.getServer().getPluginManager().getPlugin("BuyingRegions");
-        try{
-            List<ProtectedRegion> paidRegions =
-                    ownedRegions.stream().filter(region -> region.getFlag(plugin.PAID_FLAG) && region.getParent() == null ).collect(Collectors.toList());
-
-            return paidRegions;
-        }catch (Exception e){e.printStackTrace();  return Collections.emptyList();}
-    }
 
 }

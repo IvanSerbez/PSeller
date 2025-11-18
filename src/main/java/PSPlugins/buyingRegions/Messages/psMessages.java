@@ -43,6 +43,12 @@ public class psMessages {
         PlaceHolders.put("%PaidPrivateInfoButton%",String.valueOf(messAndStyle.styleButtonInfo));
 
 
+        PlaceHolders.put("%MAX_REGION_SIZE%",String.valueOf(new GetOptionsConfig().region_volume_max));
+        PlaceHolders.put("%MIN_REGION_SIZE%",String.valueOf(new GetOptionsConfig().region_volume_min));
+        PlaceHolders.put("%MAX_SUBREGION_SIZE%", String.valueOf(new GetOptionsConfig().subregion_volume_max));
+        PlaceHolders.put("%MIN_SUBREGION_SIZE%", String.valueOf(new GetOptionsConfig().subregion_volume_min));
+
+
         if(p.hasMetadata(mDataPrivateName))
         {   var name = p.getMetadata(mDataPrivateName).get(0).asString();
             PlaceHolders.put("%REGION_NANE%", name);}
@@ -104,7 +110,7 @@ public class psMessages {
 
                     TextComponent button = new TextComponent(formatMessage(word, p));
                     button.setClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/rg info " + regionID));
-                    button.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new net.md_5.bungee.api.chat.hover.content.Text("Подробнее")));
+                    button.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new net.md_5.bungee.api.chat.hover.content.Text(formatMessage(message.hoverMessButtonInfo,p))));
 
                     component.addExtra(new TextComponent(" "));
                     component.addExtra(button);
@@ -122,7 +128,7 @@ public class psMessages {
 
                     TextComponent button = new TextComponent(formatMessage(word, p));
                     button.setClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/ps list " + nextPage));
-                    button.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new net.md_5.bungee.api.chat.hover.content.Text(">>>")));
+                    button.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new net.md_5.bungee.api.chat.hover.content.Text(formatMessage(message.hoverMessButtonPageNext,p))));
                     component.addExtra(new TextComponent(" "));
                     component.addExtra(button);
                     component.addExtra(new TextComponent(" "));
@@ -135,7 +141,7 @@ public class psMessages {
                     int previousPage = currentPage;
                     TextComponent button = new TextComponent(formatMessage(word, p));
                     button.setClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/ps list " + previousPage));
-                    button.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new net.md_5.bungee.api.chat.hover.content.Text("<<<")));
+                    button.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new net.md_5.bungee.api.chat.hover.content.Text(formatMessage(message.hoverMessButtonPagePrevious,p))));
                     component.addExtra(new TextComponent(" "));
                     component.addExtra(button);
                     component.addExtra(new TextComponent(" "));
@@ -363,6 +369,22 @@ public class psMessages {
         p.sendMessage(formatMessage(message.messErrorLimitOfBlocks,p));
     }
 
+    public  static void ErrorMinLimitOfBlock(Player p)
+    {
+        p.sendMessage(formatMessage(message.messErrorMinimalLimitOfBlock,p));
+    }
+
+    public  static void ErrorSubLimitOfBlock(Player p)
+    {
+        p.sendMessage(formatMessage(message.messErrorSubLimitOfBlocks,p));
+    }
+
+    public static void ErrorMinimalSubLimitOfBlock(Player p)
+    {
+        p.sendMessage(formatMessage(message.messErrorMinimalSuBLimitOfBlock,p));
+    }
+
+
     ///  сообщения подсчета выделения
     public static void CostMess(Player p, int summSize)
     {  GetOptionsConfig optionsConfig = new GetOptionsConfig();
@@ -507,7 +529,6 @@ public class psMessages {
         String messErrorNotFoundNameSub;
         String messErrorAreaIntersection;
         String messErrorNotEnoughMoney;
-        String messErrorLimitOfBlocks;
         String messErrorName;
         String messErrorNotFoundParent;
         String messErrorNameRegEx;
@@ -516,10 +537,18 @@ public class psMessages {
         String messPsListEnd;
         String messPsListPageButtons;
         String messPsListNotFoundRegions;
+        String messErrorLimitOfBlocks;
+        String messErrorSubLimitOfBlocks;
+        String messErrorMinimalLimitOfBlock;
+        String messErrorMinimalSuBLimitOfBlock;
 
         String styleButtonPageNext;
         String styleButtonPagePrevious;
         String styleButtonInfo;
+
+        String hoverMessButtonPageNext;
+        String hoverMessButtonPagePrevious;
+        String hoverMessButtonInfo;
 
         // дастать из конфига все сообщения
 
@@ -541,11 +570,14 @@ public class psMessages {
            messErrorNotFoundName = messHeader + config.getString("MessErrorNotFoundName");
            messErrorAreaIntersection = messHeader + config.getString("MessErrorAreaIntersection");
            messErrorNotEnoughMoney = messHeader + config.getString("MessErrorNotEnoughMoney");
-           messErrorLimitOfBlocks = messHeader + config.getString("MessErrorLimitOfBlocks");
            messErrorName = messHeader + config.getString("MessErrorName");
            messErrorNotFoundParent = messHeader + config.getString("MessErrorNotFoundParent");
            messErrorNotFoundNameSub = messHeader + config.getString("MessErrorNotFoundNameSub");
            messErrorNameRegEx = messHeader + config.getString("MessErrorNameRegEx");
+           messErrorLimitOfBlocks = messHeader + config.getString("MessErrorLimitOfBlocks");
+           messErrorSubLimitOfBlocks = messHeader + config.getString("MessErrorSubLimitOfBlocks");
+           messErrorMinimalLimitOfBlock = messHeader + config.getString("MessErrorMinimalLimitOfBlock");
+           messErrorMinimalSuBLimitOfBlock = messHeader + config.getString("MessErrorMinimalSuBLimitOfBlock");
 
 
 
@@ -558,6 +590,12 @@ public class psMessages {
             styleButtonPageNext = config.getString("StyleButtonPageNext");
             styleButtonPagePrevious = config.getString("StyleButtonPagePrevious");
             styleButtonInfo = config.getString("StyleButtonInfo");
+
+
+            hoverMessButtonPageNext = config.getString("HoverMessButtonPageNext");
+            hoverMessButtonPagePrevious = config.getString("HoverMessButtonPagePrevious") ;
+            hoverMessButtonInfo = config.getString("HoverMessButtonInfo");
+
 
 
         }

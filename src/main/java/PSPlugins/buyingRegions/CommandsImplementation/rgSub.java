@@ -1,6 +1,7 @@
 package PSPlugins.buyingRegions.CommandsImplementation;
 
 import PSPlugins.buyingRegions.BuyingRegions;
+import PSPlugins.buyingRegions.Files.GetOptionsConfig;
 import PSPlugins.buyingRegions.Hooks.VaultHook;
 import PSPlugins.buyingRegions.Messages.psMessages;
 import net.milkbowl.vault.economy.Economy;
@@ -13,6 +14,7 @@ import java.util.regex.Pattern;
 public class rgSub {
 
 
+   static GetOptionsConfig optionsConfig = new GetOptionsConfig();
     static  String mDataPrivateName = "PrivateName";
 
     ///  назначает тип и имя суб-региона. после предлагает подтвердить покупку
@@ -39,6 +41,7 @@ public class rgSub {
         }
         /// ///////////////////////////////////////////////
 
+
         ///  Кэш данные названия региона
         p.setMetadata(mDataPrivateName, new FixedMetadataValue(plugin, privateName));
         ///  проверка на занятость названия
@@ -48,6 +51,11 @@ public class rgSub {
         ///  проверка нахождения суб привата полностью в платном регионе игрока
         if(PrivateOperations.subPrivateIntersection(p))
         {
+            if (costDatabox.summSize > optionsConfig.subregion_volume_max)
+            {psMessages.ErrorSubLimitOfBlock(p); return;}
+            else if(costDatabox.summSize < optionsConfig.subregion_volume_min)
+            {psMessages.ErrorMinimalSubLimitOfBlock(p); return;}
+
             ///  проверка баланса игрока
                 Economy economy = VaultHook.getEconomy();
                 if (!economy.has(p, costDatabox.priceSubPrivate)) {

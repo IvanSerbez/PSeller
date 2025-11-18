@@ -10,7 +10,7 @@ import org.bukkit.entity.Player;
 
 public class Confirm {
 
-static String privateName = null;
+    //static String privateName =  null;
 static  String mDataPrivateName = "PrivateName";
 
 
@@ -22,7 +22,7 @@ static  String mDataPrivateName = "PrivateName";
 
         GetOptionsConfig optionsConfig = new GetOptionsConfig();
        if (costDataBox == null) { psMessages.NotFoundSelectionMess(p);} else {
-           if(costDataBox.summSize > optionsConfig.region_volume_max || costDataBox.summSize < optionsConfig.region_volume_min){ psMessages.ErrorLimitOfBlocks(p); return; }
+
            boolean thisIsSubPrivate = false;
 
            /// взятие кэша типа региона
@@ -32,8 +32,16 @@ static  String mDataPrivateName = "PrivateName";
 
 
            if (thisIsSubPrivate) {
+               if(costDataBox.summSize > optionsConfig.region_volume_max)
+               {psMessages.ErrorLimitOfBlocks(p); return; }
+               else if ( costDataBox.summSize < optionsConfig.region_volume_min)
+               { psMessages.ErrorMinLimitOfBlock(p); return; }
                confirmSubPrivate(p, plugin);
            } else {
+               if(costDataBox.summSize > optionsConfig.subregion_volume_max)
+               { psMessages.ErrorSubLimitOfBlock(p); return; }
+               else if (costDataBox.summSize < optionsConfig.subregion_volume_min)
+               { psMessages.ErrorMinimalSubLimitOfBlock(p); return; }
                confirmPrivate(p, plugin);
            }
        }
@@ -42,6 +50,8 @@ static  String mDataPrivateName = "PrivateName";
     ///  подтверждение  покупки региона. снимает деньги и создает регион
     private static void  confirmPrivate(Player p, BuyingRegions plugin)
     {
+        String privateName = getPrivateName(p);
+
         if(!hasMoney(p,false))
         { /* error */  return;}
 
@@ -65,6 +75,9 @@ static  String mDataPrivateName = "PrivateName";
     ///  подтверждение  покупки Суб-региона. снимает деньги и создает Суб-регион
     private static void  confirmSubPrivate(Player p, BuyingRegions plugin)
     {
+        String privateName = getPrivateName(p);
+
+
         if(!PrivateOperations.parentHasPaidFlag(p)){ return;}
         if(!hasMoney(p,true))
         { psMessages.PrivateNotEnoughMoney(p);  return;}
@@ -86,8 +99,16 @@ static  String mDataPrivateName = "PrivateName";
     /// взятие имени региона. проверка есть ли имя
     private static boolean updatePrivateName(Player p)
     {
+        String privateName = getPrivateName(p);
+
         if (p.hasMetadata(mDataPrivateName))
         {privateName = p.getMetadata(mDataPrivateName).get(0).asString(); return true;} else  return false;
+    }
+    private static String getPrivateName(Player p)
+    {
+
+        if (p.hasMetadata(mDataPrivateName))
+        { return   p.getMetadata(mDataPrivateName).get(0).asString();} else  return null;
     }
 
     /// проверка баланса игрока
@@ -113,7 +134,7 @@ static  String mDataPrivateName = "PrivateName";
 
     ///  снятие денег со счета игрока. в дальнейшем подтверждает создание региона!
     public static void WithdrawalMoney(Player p, Boolean isSub, BuyingRegions plugin) {
-
+        String privateName = getPrivateName(p);
         ///  взятие данных выделения
         CostDataBox costDataBox = Cost.getCostDataBox(p);
 

@@ -61,7 +61,7 @@ public class Cost {
             /// ВАЖНО!!!! формула на суб приваты не официальная! Требуется замена на согласованную формулу.!!!
             int pricesub = (int) (optionsConfig.start_sub_cost +(1 * optionsConfig.region_multiplier) + (10 / (1 + Math.exp(1 * optionsConfig.region_ratio))) * Math.sqrt(numberOfPrivates * optionsConfig.subregion_cost * summSize ));
 
-            
+
             /// возвращает Класс данных выделения,m
              return new CostDataBox(p,price,new Vector(sizeX,sizeY,sizeZ),summSize,pricesub,numberOfPrivates);
 
