@@ -59,8 +59,13 @@ public class psMessages {
             PlaceHolders.put("%Y_SIZE%", String.valueOf((int)data.size.getY()));
             PlaceHolders.put("%Z_SIZE%", String.valueOf((int)data.size.getZ()));
             PlaceHolders.put("%SUMM_SIZE%",String.valueOf(data.summSize));
-            PlaceHolders.put("%PRICE%",String.valueOf(data.price));
-            PlaceHolders.put("%PRICE_SUB%",String.valueOf(data.priceSubPrivate));
+
+
+            if(data.priceSubPrivate < 0 || data.priceSubPrivate >= 2147483647) {PlaceHolders.put("%PRICE_SUB%","2147483647+"); } else {
+            PlaceHolders.put("%PRICE_SUB%",String.valueOf(data.priceSubPrivate));}
+
+            if(data.price < 0 || data.price >= 2147483647) {PlaceHolders.put("%PRICE%","2147483647+"); } else {
+            PlaceHolders.put("%PRICE%",String.valueOf(data.price));}
         }
 
 
@@ -290,9 +295,6 @@ public class psMessages {
 
                 cash_page_mess.add(formatMessList.get(i-1));
 
-                //TextComponent formatted = buttonsFormater(formatMessList.get(i), -1, p);
-
-
                 ///  разделитель страниц
                 if(i == number_regions_per_page*pages_iter || i == number_regions)
                 {
@@ -346,7 +348,7 @@ public class psMessages {
     }
 
 
-    ///  Компановщик сообщений ps list. Преоброзует список строк в одно сообщение с переходами на новую строку. вызывать перед отправкой сообщения игроку
+    ///  Компановщик сообщений  Преоброзует список строк в одно сообщение с переходами на новую строку. вызывать перед отправкой сообщения игроку
     private static TextComponent compactMessages(List<TextComponent> list)
     {
 
@@ -361,6 +363,21 @@ public class psMessages {
         }
 
         return compactMess;
+    }
+
+    ///  компановшик сообщений на базе String. Преоброзует список строк в одно сообщение с переходами на новую строку. вызывать перед отправкой сообщения игроку
+    private static  String compactMessagesString(List<String> list)
+    {
+
+        StringBuilder compactMess = new StringBuilder();
+        for (String message : list) {
+
+            compactMess.append(message);
+
+            if(!message.equals(list.getLast())) {
+                compactMess.append("\n");}
+        }
+        return String.valueOf(compactMess);
     }
 
     ///  ошибка. выделение больше лимита блоков
@@ -387,31 +404,33 @@ public class psMessages {
 
     ///  сообщения подсчета выделения
     public static void CostMess(Player p, int summSize)
-    {  GetOptionsConfig optionsConfig = new GetOptionsConfig();
+    {
+        List<String> messages = new ArrayList<>();
+        GetOptionsConfig optionsConfig = new GetOptionsConfig();
         if(summSize > optionsConfig.region_volume_max || summSize < optionsConfig.region_volume_min)
-        {
-            ErrorLimitOfBlocks(p);
-        }
-            p.sendMessage(formatMessage(message.messSummRegionSize,p));
-            p.sendMessage(formatMessage(message.messSizeRegionXYZ,p));
-            p.sendMessage(formatMessage(message.messPrice,p));
+        {ErrorLimitOfBlocks(p);}
+
+        messages.add(formatMessage(message.messSummRegionSize,p));
+        messages.add(formatMessage(message.messSizeRegionXYZ,p));
+        messages.add(formatMessage(message.messPrice,p));
+
+        p.sendMessage(compactMessagesString(messages));
 
     }
 
     ///  сообщения подсчета выделения без цены
     public  static void SizeMess(Player p, int summSize)
     {
+        List<String> messages = new ArrayList<>();
 
         GetOptionsConfig optionsConfig = new GetOptionsConfig();
         if(summSize > optionsConfig.region_volume_max || summSize < optionsConfig.region_volume_min)
-        {
-            p.sendMessage(formatMessage(message.messErrorLimitOfBlocks,p));
+        {messages.add(formatMessage(message.messErrorLimitOfBlocks,p));}
 
-        }
+        messages.add(formatMessage(message.messSummRegionSize,p));
 
-        p.sendMessage(formatMessage(message.messSummRegionSize,p));
-
-        p.sendMessage(formatMessage(message.messSizeRegionXYZ,p));
+        messages.add((formatMessage(message.messSizeRegionXYZ,p)));
+        p.sendMessage(compactMessagesString(messages));
     }
 
     public static void PsListMessages(Player p,int numberOfPage)
